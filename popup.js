@@ -1,10 +1,16 @@
 
-//import { convertToJSON } from './functions/record.js';
+//import {convertToJSON} from './functions/record.js'
 
 
+function findContent(e)
+{
+  console.log(e.target.innerHTML);
+}
 
 function startRecording(){
-  document.body.style.backgroundColor='red';
+  // --------------- REIKIA ČIA PADARYT, KAD IMTŲ IŠ MAIN WINDOW, NE EXT TABO
+  var findBody = document.querySelector('body');
+  findBody.addEventListener('click',findContent);
   //var findBody = document.querySelector('body');
   //findBody.addEventListener('click', convertToJSON);
 }

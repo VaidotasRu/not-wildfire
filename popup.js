@@ -27,10 +27,6 @@ function startRecording(){
 function stopRecording(listener){
   isRec = false;
   document.getElementById('record').removeEventListener('click', startRecording);
-  
-
-
-
 }
 
 

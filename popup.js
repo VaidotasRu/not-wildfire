@@ -22,10 +22,20 @@ function stopRecording(){
 
 
 function play(){
-  document.body.style.backgroundColor='yellow';
+	//window.open('https://www.dakkadakka.com/dakkaforum/user/login.page');
+ // chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"});
+  //chrome.tabs.executeScript(null, {file: "Replay_Basic.js"});
+
+  
+  $.getJSON("sample.json", function (data) {
+    $.each(data, function (index, value) {
+alert(value);
+    });
+});
+  
 }
   
-  
+
    
   document.addEventListener('DOMContentLoaded', () =>{
   document.getElementById('record').addEventListener('click', startRecording);

@@ -7,5 +7,8 @@ chrome.runtime.onMessage.addListener(
       });
 
 function findContent(e){
-	chrome.runtime.sendMessage(e);
+  chrome.runtime.sendMessage({ content: e.target.innerHTML, type: "html"});
+  chrome.runtime.sendMessage({ content: e.type, type: "event"});
+
+  
 }

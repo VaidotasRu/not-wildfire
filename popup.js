@@ -4,6 +4,7 @@
 
 
 function startRecording(){
+    localStorage.clear();
     isRec = true;
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
     var activeTab = tabs[0];
@@ -12,8 +13,12 @@ function startRecording(){
     chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
       if(isRec)
       {
-        responseArray.push(response);
-        console.log(response);
+        if(response.type == "html") {
+           contentArray.push(response.content);
+        }
+        if(response.type == "event") {
+          eventArray.push(response.content);
+        }
       }
       else
       {
@@ -26,7 +31,12 @@ function startRecording(){
 
 function stopRecording(listener){
   isRec = false;
-  document.getElementById('record').removeEventListener('click', startRecording);
+  for (i = 0; i < contentArray.length; i++) { 
+      append_to_json(eventArray[i], contentArray[i], "defaultName");
+  }
+save("defaultName");
+contentArray = [];
+eventArray = [];
 }
 
 
@@ -34,9 +44,42 @@ function stopRecording(listener){
 function play(){
   document.body.style.backgroundColor='yellow';
 }
+
+function append_to_json(command, target, jsonName){
+
+	var value = null;
+		
+	if(command === null || target === null)
+		return false;
+		
+	var json = {
+		"Command":command,
+		"Target":target,
+		"Value":value
+	}
+	
+	var data = JSON.stringify(json);
+	
+	var oldJSON = localStorage.getItem(jsonName);
+    if(oldJSON === null){
+		oldJSON = "";
+	}
+    localStorage.setItem(jsonName, oldJSON + data);
+}
+	
+	function save(jsonName){
+		var json = localStorage.getItem(jsonName);
+		var storage = chrome.storage.sync;
+		
+		storage.set({jsonName:json}, function() {});
+	}
+
+
+
   
   let isRec = false;
-  var responseArray = [];
+  var contentArray = [];
+  var eventArray = [];
    
   document.addEventListener('DOMContentLoaded', () =>{
   document.getElementById('record').addEventListener('click', startRecording);

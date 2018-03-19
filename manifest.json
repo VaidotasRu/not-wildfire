@@ -9,8 +9,13 @@
     "default_icon": "assets/icon.png",
     "default_popup": "popup.html"
   },
+  "background": {
+    "scripts": ["tmp.js"]	
+  },
   "permissions": [
     "activeTab",
+	"http://*/*", 
+	"https://*/*",
 	"tabs",
     "storage"
   ]

@@ -8,7 +8,7 @@ function startRecording(){
     isRec = true;
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
     var activeTab = tabs[0];
-    chrome.tabs.sendMessage(activeTab.id, {"message": "record"});
+   chrome.tabs.sendMessage(activeTab.id, {"message": "record"});
   });
     chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
       if(isRec)
@@ -42,7 +42,32 @@ eventArray = [];
 
 
 function play(){
-  document.body.style.backgroundColor='yellow';
+	//var currentColor = localStorage.getItem('defaultName');
+	
+//	var regex = new RegExp('\>(.*?)\<');
+//var matched = (regex.exec(currentColor)).substring(1, 3);
+
+//var res = matched.substring(1, 3);
+//alert(matched);
+	//	  chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"});
+      //    chrome.tabs.executeScript(null, {file: "Replay_Basic.js"});
+		
+//		chrome.tabs.create({url: 'http://www.9gag.com'}, function(tab) {
+	//	chrome.tabs.executeScript(tab.id, {file: "tmp.js"});
+	//});
+	
+	//-----------------
+	
+    chrome.extension.sendMessage({ msg: "startFunc" });
+
+	//------------------
+	
+	//alert(tabs[0].id);   
+
+	
+//chrome.tabs.create({url: 'http://www.9gag.com'}, function(tab) {
+//		chrome.tabs.executeScript(tab.id, {file: "tmp.js"});
+//	});
 }
 
 function append_to_json(command, target, jsonName){

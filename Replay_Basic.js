@@ -1,8 +1,10 @@
 //var win = window.open();
-alert('hhhh');
+//alert('hhhh');
 //win.document.write(tabs[0].id);
+$(document).ready(function(){
 
-////$(document).ready(function(){
+$(":Contains('UP')").click();
+});
 //$(":text").val("dakkadakka");
 //var win = window.open($("a:eq(1)").attr('href'));
 //$("[name*='name']").val("edgar447744");

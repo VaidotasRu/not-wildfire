@@ -9,14 +9,24 @@
     "default_icon": "assets/icon.png",
     "default_popup": "popup.html"
   },
+
   "background": {
-    "scripts": ["tmp.js"]	
+    "scripts": [ "background.js" ],
+    "persistent": false
   },
-  "permissions": [
-    "activeTab",
-	"http://*/*", 
-	"https://*/*",
-	"tabs",
-    "storage"
-  ]
-}
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [ "content.js" ]
+    }
+    ],
+
+      "permissions": [
+	            "tabs",
+				"http://*/*", 
+				"https://*/*",
+        "activeTab",
+        "storage"
+      ]
+    }

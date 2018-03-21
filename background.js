@@ -1,4 +1,7 @@
-
+chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
+console.log(response + " viso gero");
+//alert(response);
+});
 
 var func = function(x){
 //chrome.tabs.create({'url': "http://www.9gag.com"}, function(tab){ 

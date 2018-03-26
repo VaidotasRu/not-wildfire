@@ -6,6 +6,32 @@ $(document).ready(function(){
 
 $(":Contains('UP')").click();
 });
+=======
+//$(document).ready(function(){
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    // Handle message.
+    // In this example, message === 'whatever value; String, object, whatever'
+alert('ss');
+	if(message.msg ==="UP"){
+	$(":contains('UP')").click();
+}
+if(message.msg ==="DOWN"){
+	$(":contains('DOWN')").click();
+}
+	//$(":contains('UP')").click();
+
+	//}
+	//if(message.msh ==="DOWN"){
+
+//$(":contains('DOWN')").click();
+
+	//}
+}
+);
+
+//});
+>>>>>>> Edgar
 //$(":text").val("dakkadakka");
 //var win = window.open($("a:eq(1)").attr('href'));
 //$("[name*='name']").val("edgar447744");

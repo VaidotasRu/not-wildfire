@@ -11,17 +11,14 @@
   },
 
   "background": {
-    "scripts": [ "background.js" ],
+    "scripts": [ "background.js", "jquery-3.3.1.js" ],
     "persistent": false
   },
 
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
       "js": [ "content.js" ]
-=======
-      "js": [ "content.js"]
->>>>>>> Edgar
+
     }
     ],
 

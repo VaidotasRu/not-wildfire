@@ -42,6 +42,7 @@ eventArray = [];
 
 
 function play(){
+<<<<<<< HEAD
 	//var currentColor = localStorage.getItem('defaultName');
 	
 //	var regex = new RegExp('\>(.*?)\<');
@@ -59,6 +60,32 @@ function play(){
 	//-----------------
 	
     chrome.extension.sendMessage({ msg: "startFunc" });
+//ar x = "fff>ddd<fgg"
+//	var extract = currentColor.match("/{(.*)}/").pop();
+		  chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"});
+
+   var currentColor = localStorage.getItem('defaultName');
+	var regex = new RegExp('\>(.*?)\<');
+var matched = regex.exec(currentColor);
+
+
+var r = matched[0].substring(1, matched[0].length-1);
+//var res = matched.substring(1, 3);
+		alert(r);
+
+//		chrome.tabs.create({url: 'http://www.9gag.com'}, function(tab) {
+
+	//});
+	
+	//-----------------
+			chrome.tabs.executeScript(null, {file: "Replay_Basic.js"});
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+    var activeTab = tabs[0];
+   chrome.tabs.sendMessage(activeTab.id, {msg: r});
+  });
+
+  //  chrome.extension.sendMessage({ msg: "startFunc", arg: r});
+>>>>>>> Edgar
 
 	//------------------
 	

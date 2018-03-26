@@ -8,6 +8,7 @@ chrome.tabs.executeScript(null, {file: "tmp.js"});
 //alert(tab.id);
 })
 
+=======
 	};
 
 chrome.extension.onMessage.addListener(

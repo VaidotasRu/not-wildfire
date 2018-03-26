@@ -1,6 +1,7 @@
 //var win = window.open();
 //alert('hhhh');
 //win.document.write(tabs[0].id);
+<<<<<<< HEAD
 $(document).ready(function(){
 
 $(":Contains('UP')").click();

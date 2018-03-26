@@ -19,6 +19,9 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": [ "content.js" ]
+=======
+      "js": [ "content.js"]
+>>>>>>> Edgar
     }
     ],
 

@@ -1,16 +1,20 @@
 var executed = false;
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-	if(!executed)
+	if(!executed) // Prevents undesired re-calls of injected script
 	{
+	/*	alert(message.argument); //---------------IESKANT PAGAL POZICIJA PERDUODAMI KITOKIE ARGUMENTAI
+
 		executed = true;
-alert(message.argument);
 	if(message.argument =="UP"){
 	$(":contains('UP')").click();
-}
+
+	}
 if(message.argument =="DOWN"){
 	$(":contains('DOWN')").click();
 }
-
+*/
+var elem = document.elementFromPoint(265, 371); // x, y
+elem.click();
 
 }
 }

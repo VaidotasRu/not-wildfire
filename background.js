@@ -4,7 +4,7 @@ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 console.log(response + " viso gero");
 //alert(response);
 });
-
+// ---------------PAKOLKAS NEREIKIA. REIKES KAI ATKARTOSIM VEIKSMUS PER KELIS TABUS
 var func = function(x){
 //chrome.tabs.create({'url': "http://www.9gag.com"}, function(tab){ 
 alert(x);
@@ -28,3 +28,4 @@ chrome.extension.onMessage.addListener(
 			func(request.arg);
     }
 );
+//------------------------------------------------------------------------------------

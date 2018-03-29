@@ -54,10 +54,12 @@ function play(){
 
 var r = "UP";
  chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
-injectCurrent("click", r, null);
+injectCurrent("input", 195, 271, "ddd");
 
 }
 
+//-------------------VEIKIA SU SELECTORIAIS, NE SU POZICIJOS. THO ATEITY GALI PRIREIKT
+/*
 // Injects script into current tab
 function injectCurrent(command, selector, value)
 {
@@ -73,6 +75,26 @@ else if(command == "input"){
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Passing selectors and values
     var activeTab = tabs[0];
 	   chrome.tabs.sendMessage(activeTab.id, {"argument": selector});
+  });
+}
+
+*/
+
+// Injects script into current tab
+function injectCurrent(command, posX, posY, value)
+{
+				
+if(command == "click"){
+				chrome.tabs.executeScript(null, {file: "click.js"});
+}
+else if(command == "input"){
+				chrome.tabs.executeScript(null, {file: "input.js"});
+}
+
+
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Passing selectors and values
+    var activeTab = tabs[0];
+	   chrome.tabs.sendMessage(activeTab.id, {"posX": posX, "posY": posY, "value": value});
   });
 }
 

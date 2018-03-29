@@ -1,6 +1,12 @@
 //var win = window.open();
 //alert('hhhh');
 //win.document.write(tabs[0].id);
+<<<<<<< HEAD
+$(document).ready(function(){
+
+$(":Contains('UP')").click();
+});
+=======
 //$(document).ready(function(){
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
@@ -25,6 +31,7 @@ if(message.msg ==="DOWN"){
 );
 
 //});
+>>>>>>> Edgar
 //$(":text").val("dakkadakka");
 //var win = window.open($("a:eq(1)").attr('href'));
 //$("[name*='name']").val("edgar447744");

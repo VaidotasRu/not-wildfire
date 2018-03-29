@@ -42,6 +42,7 @@ eventArray = [];
 
 
 function play(){
+
 //ar x = "fff>ddd<fgg"
 //	var extract = currentColor.match("/{(.*)}/").pop();
 		  chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"});
@@ -53,7 +54,6 @@ var matched = regex.exec(currentColor);
 
 var r = matched[0].substring(1, matched[0].length-1);
 //var res = matched.substring(1, 3);
-		alert(r);
 
 //		chrome.tabs.create({url: 'http://www.9gag.com'}, function(tab) {
 

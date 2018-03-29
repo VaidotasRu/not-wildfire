@@ -1,3 +1,5 @@
+
+
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 console.log(response + " viso gero");
 //alert(response);
@@ -31,6 +33,7 @@ var func = function(x){
 chrome.extension.onMessage.addListener(
     function(request, sender, sendResponse){
         if(request.msg == "startFunc")
+
 			func(request.arg);
     }
 );

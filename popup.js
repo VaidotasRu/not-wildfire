@@ -28,9 +28,9 @@ function play(){
 }
 
 function Dashboard(){
-
-	var newWindow = window.open("", null, "height=700,width=650,status=yes,toolbar=yes,menubar=no,location=no");
-
+	
+	var newWindow = window.open('Dashboard.html',null, 'height=620,width=610,scrollbars=yes,status=yes');
+	
 }
 
   

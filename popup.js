@@ -40,6 +40,12 @@ eventArray = [];
 }
 
 
+class Position {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
 
 function play(){
 
@@ -52,10 +58,20 @@ function play(){
 
 //-----------------------------------------------------
 
-var r = "UP";
- chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
-injectCurrent("input", 195, 271, "ddd");
+var commands = ["input","input","input"];
+var position1 = new Position(293,267);
+var position2 = new Position(296,316);
+var position3 = new Position(271,360);
 
+var pos = [position1, position2, position3];
+var values = ['aaa' , 'bbb', 'ccc'];
+alert(values[0]);
+alert(pos[0].x);
+ chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
+for(var i = 0; i < commands.length; i++)
+{
+ injectCurrent(commands[i], pos[i].x, pos[i].y, values[i]);
+}
 }
 
 //-------------------VEIKIA SU SELECTORIAIS, NE SU POZICIJOS. THO ATEITY GALI PRIREIKT

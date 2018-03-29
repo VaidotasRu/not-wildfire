@@ -13,7 +13,8 @@ if(message.argument =="DOWN"){
 	$(":contains('DOWN')").click();
 }
 */
-var elem = document.elementFromPoint(265, 371); // x, y
+
+var elem = document.elementFromPoint(message.posX, message.posY); // x, y
 elem.click();
 
 }

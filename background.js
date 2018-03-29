@@ -16,18 +16,6 @@ var func = function(x){
    chrome.tabs.sendMessage(activeTab.id, {"argument": x});
   });
 
-
-//$(document).ready(function(){
-
-//$(":contains('UP')").click();
-//});
-
-//alert('vvvvvvvvvv');
-//    chrome.tabs.sendMessage({ arg: "tttttyyyyy"});
-
-//
-//alert('ddddddd');
-//})
 	};
 
 chrome.extension.onMessage.addListener(

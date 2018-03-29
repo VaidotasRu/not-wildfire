@@ -7,13 +7,16 @@ console.log(response + " viso gero");
 
 var func = function(x){
 //chrome.tabs.create({'url': "http://www.9gag.com"}, function(tab){ 
+alert(x);
 
 
-
-		chrome.tabs.executeScript(null, {file: "Replay_Basic.js"});
 		    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
     var activeTab = tabs[0];
-   chrome.tabs.sendMessage(activeTab.id, {"argument": x});
+				chrome.tabs.executeScript(activeTab.id, {file: "Replay_Basic.js"});
+
+	   chrome.tabs.sendMessage(activeTab.id, {"argument": x});
+
+
   });
 
 	};

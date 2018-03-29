@@ -43,32 +43,37 @@ eventArray = [];
 
 function play(){
 
-		  chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"});
-   var currentColor = localStorage.getItem('defaultName');
-	var regex = new RegExp('\>(.*?)\<');
-var matched = regex.exec(currentColor);
+//----------BUS PAKEISTA ALGIO REGEXU-------------
+
+//var currentColor = localStorage.getItem('defaultName');  
+//var regex = new RegExp('\>(.*?)\<');
+//var matched = regex.exec(currentColor);
+//var r = matched[0].substring(1, matched[0].length-1);
+
+//-----------------------------------------------------
+
+var r = "UP";
+ chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
+injectCurrent("click", r, null);
+
+}
+
+// Injects script into current tab
+function injectCurrent(command, selector, value)
+{
+				
+if(command == "click"){
+				chrome.tabs.executeScript(null, {file: "click.js"});
+}
+else if(command == "input"){
+				chrome.tabs.executeScript(null, {file: "input.js"});
+}
 
 
-var r = matched[0].substring(1, matched[0].length-1);
-
-	
-	//-----------------
-			chrome.tabs.executeScript(null, {file: "Replay_Basic.js"});  // Not sure ar sito reikia
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Passing selectors and values
     var activeTab = tabs[0];
-   chrome.tabs.sendMessage(activeTab.id, {msg: r});
+	   chrome.tabs.sendMessage(activeTab.id, {"argument": selector});
   });
-
-  //  chrome.extension.sendMessage({ msg: "startFunc", arg: r});
-
-	//------------------
-	
-	//alert(tabs[0].id);   
-
-	
-//chrome.tabs.create({url: 'http://www.9gag.com'}, function(tab) {
-//		chrome.tabs.executeScript(tab.id, {file: "tmp.js"});
-//	});
 }
 
 function append_to_json(command, target, jsonName){

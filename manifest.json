@@ -9,8 +9,25 @@
     "default_icon": "assets/icon.png",
     "default_popup": "popup.html"
   },
-  "permissions": [
-    "activeTab",
-    "storage"
-  ]
-}
+
+  "background": {
+    "scripts": [ "background.js", "jquery-3.3.1.js" ],
+    "persistent": false
+  },
+
+  "content_scripts": [
+    {
+	      "matches": ["http://*/*", "https://*/*"],
+	"js": [ "content.js" ]
+
+    }
+    ],
+
+      "permissions": [
+	            "tabs",
+				"http://*/*", 
+				"https://*/*",
+        "activeTab",
+        "storage"
+      ]
+    }

@@ -1,1 +1,2 @@
-kiekvienas veiksmas appendina nauja scripta prie puslapio. Pakolkas bugu nekelia, but keep in mind
+neeina gaut callbacko is injectinto scripto, tenka daryt pauzes
+REloadinus page'a reikia kazkur idet jQuery on ducument ready

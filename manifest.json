@@ -12,6 +12,7 @@
 
   "background": {
     "scripts": [ "background.js", "jquery-3.3.1.js" ],
+		      "matches": ["http://*/*", "https://*/*"],
     "persistent": false
   },
 

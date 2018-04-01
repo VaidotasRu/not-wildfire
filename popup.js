@@ -51,8 +51,6 @@ function play(){
 //-----------------------------------------------------
 	   chrome.runtime.sendMessage({trigger: "start"}); //Starts replaying in a current tab
 
-
-
 //-------------------VEIKIA SU SELECTORIAIS, NE SU POZICIJOS. THO ATEITY GALI PRIREIKT
 /*
 // Injects script into current tab
@@ -106,9 +104,6 @@ function append_to_json(command, target, jsonName){
 		storage.set({jsonName:json}, function() {});
 	}
 
-
-
-  
   let isRec = false;
   var contentArray = [];
   var eventArray = [];

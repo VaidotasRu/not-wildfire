@@ -12,8 +12,12 @@ if(message.argument =="DOWN"){
 }
 */
 
-var elem = document.elementFromPoint(message.posX, message.posY); // x, y
-elem.click();
-}
+//var elem = document.elementFromPoint(message.posX, message.posY); // x, y
+//elem.click();
 
-);
+$(window).on('beforeunload', function(){
+alert('load');
+});
+
+
+});

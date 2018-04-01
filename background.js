@@ -40,10 +40,8 @@ var position3 = new Position(271,360);
  chrome.tabs.executeScript(tabs[0].id, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
   });
   
-  
- for(var i = 0; i < commands.length; i++){
- injectCurrent(commands[i], pos[i].x, pos[i].y, values[i]);				
-		}		
+callInjection(0);
+	
 }
 
 // ---------------PAKOLKAS NEREIKIA. REIKES KAI ATKARTOSIM VEIKSMUS PER KELIS TABUS
@@ -65,6 +63,22 @@ chrome.extension.onMessage.addListener(
 			func(request.arg);
     }
 );
+
+function callInjection(index){
+ injectCurrent(commands[index], pos[index].x, pos[index].y, values[index]);				
+	 setTimeout(function(){
+		 	 if(index < commands.length){
+			 callInjection(index+1);	 
+	 			 }
+
+	 
+	 }, 1000);
+		 	
+			 
+	 
+	 
+}
+
 //------------------------------------------------------------------------------------
 // Injects script into current tab
 function injectCurrent(command, posX, posY, value)
@@ -78,10 +92,10 @@ if(jQuery.inArray(command, injectedScript) !== -1)
 }
 else {
 injectedScript.push(command);
+	var file = command.concat("_ext.js");				
+				chrome.tabs.executeScript(activeTab.id, {file: file}, function(){
+										chrome.tabs.sendMessage(activeTab.id, {"posX": posX, "posY": posY, "value": value});
 
-	var file = command.concat("_ext.js");
-					chrome.tabs.executeScript(activeTab.id, {file: file}, function(){
-							chrome.tabs.sendMessage(activeTab.id, {"posX": posX, "posY": posY, "value": value});
 					});
 }
   });

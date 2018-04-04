@@ -3,23 +3,15 @@
 //$(document).ready(function(){
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    // Handle message.
-    // In this example, message === 'whatever value; String, object, whatever'
-alert('ss');
-	if(message.msg ==="UP"){
+	
+alert(message.argument);
+	if(message.argument =="UP"){
 	$(":contains('UP')").click();
 }
-if(message.msg ==="DOWN"){
+if(message.argument =="DOWN"){
 	$(":contains('DOWN')").click();
 }
-	//$(":contains('UP')").click();
 
-	//}
-	//if(message.msh ==="DOWN"){
-
-//$(":contains('DOWN')").click();
-
-	//}
 }
 );
 

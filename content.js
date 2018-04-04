@@ -1,6 +1,6 @@
 chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) {
-        if( request.message === "record" ) {
+	   if( request.message === "record" ) {
          	var findBody = document.querySelector('body');
   			findBody.addEventListener('click',findContent);
 		}

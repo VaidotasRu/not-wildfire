@@ -1,4 +1,3 @@
-
 //import {convertToJSON} from './functions/record.js'
 
 
@@ -6,7 +5,6 @@
 function startRecording(){
     localStorage.clear();
     isRec = true;
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
     var activeTab = tabs[0];
    chrome.tabs.sendMessage(activeTab.id, {"message": "record"});
   });
@@ -34,6 +32,7 @@ function stopRecording(listener){
   for (i = 0; i < contentArray.length; i++) { 
       append_to_json(eventArray[i], contentArray[i], "defaultName");
   }
+
 save("defaultName");
 contentArray = [];
 eventArray = [];
@@ -41,35 +40,35 @@ eventArray = [];
 
 
 
+
 function play(){
 
-		  chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"});
-   var currentColor = localStorage.getItem('defaultName');
-	var regex = new RegExp('\>(.*?)\<');
-var matched = regex.exec(currentColor);
+	   chrome.runtime.sendMessage({trigger: "start"}); //Starts replaying in a current tab
 
 
-var r = matched[0].substring(1, matched[0].length-1);
-
-	
-	//-----------------
-			chrome.tabs.executeScript(null, {file: "Replay_Basic.js"});  // Not sure ar sito reikia
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-    var activeTab = tabs[0];
-   chrome.tabs.sendMessage(activeTab.id, {msg: r});
-  });
-
-  //  chrome.extension.sendMessage({ msg: "startFunc", arg: r});
-
-	//------------------
-	
-	//alert(tabs[0].id);   
-
-	
-//chrome.tabs.create({url: 'http://www.9gag.com'}, function(tab) {
-//		chrome.tabs.executeScript(tab.id, {file: "tmp.js"});
-//	});
+//-------------------VEIKIA SU SELECTORIAIS, NE SU POZICIJOS. THO ATEITY GALI PRIREIKT
+/*
+// Injects script into current tab
+function injectCurrent(command, selector, value)
+{
+				
+if(command == "click"){
+				chrome.tabs.executeScript(null, {file: "click.js"});
 }
+else if(command == "input"){
+				chrome.tabs.executeScript(null, {file: "input.js"});
+}
+
+
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Passing selectors and values
+    var activeTab = tabs[0];
+	   chrome.tabs.sendMessage(activeTab.id, {"argument": selector});
+  });
+}
+
+*/
+}
+
 
 function append_to_json(command, target, jsonName){
 
@@ -100,9 +99,6 @@ function append_to_json(command, target, jsonName){
 		storage.set({jsonName:json}, function() {});
 	}
 
-
-
-  
   let isRec = false;
   var contentArray = [];
   var eventArray = [];

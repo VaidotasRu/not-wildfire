@@ -1,9 +1,4 @@
-class Position {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-}
+
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 console.log(response + " viso gero");
 //alert(response);
@@ -11,22 +6,24 @@ console.log(response + " viso gero");
    if(response.trigger == "start"){
 assignValues();
 	}
-	else{
-		alert(response.trigger);
-	}
-	
-	
-	
 });
 
+class Position {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
 var pos;
 var values;
 var commands;
 var index;
-var injectedScript = [];
+var injectedScript = []; // Scripts that are already injected in page
 
-
+// Reads data from chrome.storage and selects commands, positions and values 
 function assignValues(){
+	
+	//-------------- bus pakeista i regex
 			 commands = ["input","input","input"];
 var position1 = new Position(271,272);
 var position2 = new Position(271,312);
@@ -35,12 +32,12 @@ var position3 = new Position(271,360);
  pos = [position1, position2, position3];
 
  values = ['aaa' , 'bbb', 'ccc'];
-
+//------------------------
 		    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
  chrome.tabs.executeScript(tabs[0].id, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
   });
   
-callInjection(0);
+callInjection(0); //Starting simulation
 	
 }
 
@@ -55,7 +52,6 @@ alert(x);
   });
 
 	};
-
 chrome.extension.onMessage.addListener(
     function(request, sender, sendResponse){
         if(request.msg == "startFunc")
@@ -63,15 +59,15 @@ chrome.extension.onMessage.addListener(
 			func(request.arg);
     }
 );
+//-------------------------------------------------------------------
 
+// Function is recursively called with one second gaps until it iterates through all commands
 function callInjection(index){
  injectCurrent(commands[index], pos[index].x, pos[index].y, values[index]);				
 	 setTimeout(function(){
 		 	 if(index < commands.length){
 			 callInjection(index+1);	 
-	 			 }
-
-	 
+	 			 }	 
 	 }, 1000);
 		 	
 			 
@@ -86,7 +82,7 @@ function injectCurrent(command, posX, posY, value)
 
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Passing selectors and values
     var activeTab = tabs[0];	
-if(jQuery.inArray(command, injectedScript) !== -1)
+if(jQuery.inArray(command, injectedScript) !== -1) // If
 {
 							chrome.tabs.sendMessage(activeTab.id, {"posX": posX, "posY": posY, "value": value});
 }
@@ -100,3 +96,4 @@ injectedScript.push(command);
 }
   });
 }
+

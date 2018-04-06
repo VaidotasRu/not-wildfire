@@ -1,7 +1,6 @@
 
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 console.log(response + " viso gero");
-<<<<<<< HEAD
 
 if(response.type == "start"){ // Start recording
 	isRec = true;
@@ -22,31 +21,12 @@ append_to_json(eventArray[i], contentArray[i], "defaultName"); // Saving data to
 }
 }
 }
-   if(response.trigger == "start"){
-assignValues();
-	}
-=======
-/*
-chrome.tabs.create({'url': "http://www.9gag.com"}, function(tab){ 
- //chrome.tabs.executeScript(tab.id, {file: "tmp.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
-alert(tab.id);
->>>>>>> develop
-});
-		    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-    var activeTab = tabs[0];
-         alert(activeTab.id);
-		  chrome.tabs.executeScript(tabs[0].id, {file: "tmp.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
 
-<<<<<<< HEAD
-=======
-  });
-*/
   if(response.trigger == "start"){
 assignValues();
 	}
 });
 
->>>>>>> develop
 class Position {
   constructor(x, y) {
     this.x = x;
@@ -69,10 +49,9 @@ var position2 = new Position(271,312);
 var position3 = new Position(271,360);
 
  pos = [position1, position2, position3];
-<<<<<<< HEAD
 
  values = ['aaa' , 'bbb', 'ccc'];
-//------------------------
+
 		    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
  chrome.tabs.executeScript(tabs[0].id, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
   });
@@ -108,21 +87,6 @@ function append_to_json(command, target, jsonName){
   var eventArray = [];
 
 
-
-
-=======
-
- values = ['aaa' , 'bbb', 'ccc'];
-//------------------------
-		    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
- chrome.tabs.executeScript(tabs[0].id, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
-  });
-  
-callInjection(0); //Starting simulation
-	
-}
-
->>>>>>> develop
 // ---------------PAKOLKAS NEREIKIA. REIKES KAI ATKARTOSIM VEIKSMUS PER KELIS TABUS
 var func = function(x){
 //chrome.tabs.create({'url': "http://www.9gag.com"}, function(tab){ 
@@ -134,7 +98,7 @@ alert(x);
   });
 
 	};
-<<<<<<< HEAD
+ 
 
 //-------------------------------------------------------------------
 
@@ -170,50 +134,4 @@ injectedScript.push(command);
   });
 }
 
-=======
-chrome.extension.onMessage.addListener(
-    function(request, sender, sendResponse){
-        if(request.msg == "startFunc")
 
-			func(request.arg);
-    }
-);
-//-------------------------------------------------------------------
-
-// Function is recursively called with one second gaps until it iterates through all commands
-function callInjection(index){
- injectCurrent(commands[index], pos[index].x, pos[index].y, values[index]);				
-	 setTimeout(function(){
-		 	 if(index < commands.length){
-			 callInjection(index+1);	 
-	 			 }	 
-	 }, 1000);
-		 	
-			 
-	 
-	 
-}
-
-//------------------------------------------------------------------------------------
-// Injects script into current tab
-function injectCurrent(command, posX, posY, value)
-{				
-
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Passing selectors and values
-    var activeTab = tabs[0];	
-if(jQuery.inArray(command, injectedScript) !== -1) // If
-{
-							chrome.tabs.sendMessage(activeTab.id, {"posX": posX, "posY": posY, "value": value});
-}
-else {
-injectedScript.push(command);
-	var file = command.concat("_ext.js");				
-				chrome.tabs.executeScript(activeTab.id, {file: file}, function(){
-										chrome.tabs.sendMessage(activeTab.id, {"posX": posX, "posY": posY, "value": value});
-
-					});
-}
-  });
-}
-
->>>>>>> develop

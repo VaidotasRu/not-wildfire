@@ -14,19 +14,6 @@ function startRecording(){
   });
 }
 
-<<<<<<< HEAD
-=======
-function stopRecording(listener){
-  isRec = false;
-  for (i = 0; i < contentArray.length; i++) { 
-      append_to_json(eventArray[i], contentArray[i], "defaultName");
-  }
-
-save("defaultName");
-contentArray = [];
-eventArray = [];
-}
->>>>>>> develop
 
 function stopRecording(listener){
 
@@ -62,11 +49,8 @@ else if(command == "input"){
 */
 }
 
-<<<<<<< HEAD
 /*  ---------------PERMESTA I BACKGROUNDA
-=======
 
->>>>>>> develop
 function append_to_json(command, target, jsonName){
 
 	var value = null;

@@ -1,10 +1,6 @@
 
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 console.log(response + " viso gero");
-<<<<<<< HEAD
-//alert(response);
-
-=======
 
 if(response.type == "start"){ // Start recording
 	isRec = true;
@@ -25,13 +21,11 @@ append_to_json(eventArray[i], contentArray[i], "defaultName"); // Saving data to
 }
 }
 }
->>>>>>> Test
    if(response.trigger == "start"){
 assignValues();
 	}
 });
 
-<<<<<<< HEAD
 class Position {
   constructor(x, y) {
     this.x = x;
@@ -55,7 +49,15 @@ var position3 = new Position(271,360);
 
  pos = [position1, position2, position3];
 
-=======
+ values = ['aaa' , 'bbb', 'ccc'];
+//------------------------
+		    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+ chrome.tabs.executeScript(tabs[0].id, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
+  });
+  
+callInjection(0); //Starting simulation
+	
+}
 
 function append_to_json(command, target, jsonName){
 
@@ -83,39 +85,8 @@ function append_to_json(command, target, jsonName){
   var contentArray = [];
   var eventArray = [];
 
-class Position {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-}
-var pos;
-var values;
-var commands;
-var index;
-var injectedScript = []; // Scripts that are already injected in page
 
-// Reads data from chrome.storage and selects commands, positions and values 
-function assignValues(){
-	
-	//-------------- bus pakeista i regex
-			 commands = ["input","input","input"];
-var position1 = new Position(271,272);
-var position2 = new Position(271,312);
-var position3 = new Position(271,360);
 
- pos = [position1, position2, position3];
-
->>>>>>> Test
- values = ['aaa' , 'bbb', 'ccc'];
-//------------------------
-		    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
- chrome.tabs.executeScript(tabs[0].id, {file: "jquery-3.3.1.js"}); // Line is not added to injectCurrent, to prevent multiple library injections
-  });
-  
-callInjection(0); //Starting simulation
-	
-}
 
 // ---------------PAKOLKAS NEREIKIA. REIKES KAI ATKARTOSIM VEIKSMUS PER KELIS TABUS
 var func = function(x){
@@ -128,13 +99,7 @@ alert(x);
   });
 
 	};
-chrome.extension.onMessage.addListener(
-    function(request, sender, sendResponse){
-        if(request.msg == "startFunc")
 
-			func(request.arg);
-    }
-);
 //-------------------------------------------------------------------
 
 // Function is recursively called with one second gaps until it iterates through all commands
@@ -144,23 +109,19 @@ function callInjection(index){
 		 	 if(index < commands.length){
 			 callInjection(index+1);	 
 	 			 }	 
-	 }, 1000);
-		 	
-			 
-	 
+	 }, 1000);		 	
 	 
 }
 
-//------------------------------------------------------------------------------------
 // Injects script into current tab
 function injectCurrent(command, posX, posY, value)
 {				
 
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Passing selectors and values
     var activeTab = tabs[0];	
-if(jQuery.inArray(command, injectedScript) !== -1) // If
+if(jQuery.inArray(command, injectedScript) !== -1) 
 {
-							chrome.tabs.sendMessage(activeTab.id, {"posX": posX, "posY": posY, "value": value});
+		chrome.tabs.sendMessage(activeTab.id, {"posX": posX, "posY": posY, "value": value});
 }
 else {
 injectedScript.push(command);

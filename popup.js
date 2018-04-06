@@ -15,25 +15,10 @@ function startRecording(){
 
 
 function stopRecording(listener){
-<<<<<<< HEAD
-  isRec = false;
-  for (i = 0; i < contentArray.length; i++) { 
-      append_to_json(eventArray[i], contentArray[i], "defaultName");
-  }
 
-save("defaultName");
-contentArray = [];
-eventArray = [];
-}
-
-
-
-
-=======
 	   chrome.runtime.sendMessage({type: "stop"}); //Starts replaying in a current tab
 }
 
->>>>>>> Test
 function play(){
 
 	   chrome.runtime.sendMessage({trigger: "start"}); //Starts replaying in a current tab
@@ -62,11 +47,7 @@ else if(command == "input"){
 */
 }
 
-<<<<<<< HEAD
-
-=======
 /*  ---------------PERMESTA I BACKGROUNDA
->>>>>>> Test
 function append_to_json(command, target, jsonName){
 
 	var value = null;

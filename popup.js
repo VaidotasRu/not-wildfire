@@ -1,76 +1,51 @@
-
 //import {convertToJSON} from './functions/record.js'
 
 
 
 function startRecording(){
-    localStorage.clear();
-    isRec = true;
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+    localStorage.clear(); // Reiks istrint kuomet galima bus skirti irasui varda
+    //isRec = true
+    	   chrome.runtime.sendMessage({type: "start"}); // Sending message to background
+
+	chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script
     var activeTab = tabs[0];
    chrome.tabs.sendMessage(activeTab.id, {"message": "record"});
   });
-    chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
-      if(isRec)
-      {
-        if(response.type == "html") {
-           contentArray.push(response.content);
-        }
-        if(response.type == "event") {
-          eventArray.push(response.content);
-        }
-      }
-      else
-      {
-        chrome.runtime.onMessage.removeListener();
-      }
-
-});
-   
 }
 
 function stopRecording(listener){
-  isRec = false;
-  for (i = 0; i < contentArray.length; i++) { 
-      append_to_json(eventArray[i], contentArray[i], "defaultName");
-  }
-save("defaultName");
-contentArray = [];
-eventArray = [];
+	   chrome.runtime.sendMessage({type: "stop"}); //Starts replaying in a current tab
 }
-
-
 
 function play(){
 
-		  chrome.tabs.executeScript(null, {file: "jquery-3.3.1.js"});
-   var currentColor = localStorage.getItem('defaultName');
-	var regex = new RegExp('\>(.*?)\<');
-var matched = regex.exec(currentColor);
+	   chrome.runtime.sendMessage({trigger: "start"}); //Starts replaying in a current tab
 
 
-var r = matched[0].substring(1, matched[0].length-1);
-
-	
-	//-----------------
-			chrome.tabs.executeScript(null, {file: "Replay_Basic.js"});  // Not sure ar sito reikia
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-    var activeTab = tabs[0];
-   chrome.tabs.sendMessage(activeTab.id, {msg: r});
-  });
-
-  //  chrome.extension.sendMessage({ msg: "startFunc", arg: r});
-
-	//------------------
-	
-	//alert(tabs[0].id);   
-
-	
-//chrome.tabs.create({url: 'http://www.9gag.com'}, function(tab) {
-//		chrome.tabs.executeScript(tab.id, {file: "tmp.js"});
-//	});
+//-------------------VEIKIA SU SELECTORIAIS, NE SU POZICIJOS. THO ATEITY GALI PRIREIKT
+/*
+// Injects script into current tab
+function injectCurrent(command, selector, value)
+{
+				
+if(command == "click"){
+				chrome.tabs.executeScript(null, {file: "click.js"});
+}
+else if(command == "input"){
+				chrome.tabs.executeScript(null, {file: "input.js"});
 }
 
+
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Passing selectors and values
+    var activeTab = tabs[0];
+	   chrome.tabs.sendMessage(activeTab.id, {"argument": selector});
+  });
+}
+
+*/
+}
+
+/*  ---------------PERMESTA I BACKGROUNDA
 function append_to_json(command, target, jsonName){
 
 	var value = null;
@@ -100,13 +75,10 @@ function append_to_json(command, target, jsonName){
 		storage.set({jsonName:json}, function() {});
 	}
 
-
-
-  
   let isRec = false;
   var contentArray = [];
   var eventArray = [];
-   
+   */
   document.addEventListener('DOMContentLoaded', () =>{
   document.getElementById('record').addEventListener('click', startRecording);
   document.getElementById('stop').addEventListener('click',stopRecording);

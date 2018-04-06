@@ -1,0 +1,2 @@
+neeina gaut callbacko is injectinto scripto, tenka daryt pauzes
+REloadinus page'a reikia kazkur idet jQuery on ducument ready

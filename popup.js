@@ -23,7 +23,7 @@ function stopRecording(listener){
 
 function play(){
 
-	   chrome.runtime.sendMessage({trigger: "start"}); //Starts replaying in a current tab
+	   chrome.runtime.sendMessage({type: "Play"}); //Starts replaying in a current tab
 
 
 //-------------------VEIKIA SU SELECTORIAIS, NE SU POZICIJOS. THO ATEITY GALI PRIREIKT

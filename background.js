@@ -22,7 +22,7 @@ append_to_json(eventArray[i], contentArray[i], "defaultName"); // Saving data to
 }
 }
 
-  if(response.trigger == "start"){
+  if(response.type == "Play"){
 assignValues();
 	}
 });

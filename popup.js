@@ -3,33 +3,19 @@
 
 
 function startRecording(){
-    localStorage.clear();
-    isRec = true;
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+    localStorage.clear(); // Reiks istrint kuomet galima bus skirti irasui varda
+    //isRec = true
+    	   chrome.runtime.sendMessage({type: "start"}); // Sending message to background
+
+	chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script
     var activeTab = tabs[0];
    chrome.tabs.sendMessage(activeTab.id, {"message": "record"});
   });
-    chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
-      if(isRec)
-      {
-        if(response.type == "html") {
-           contentArray.push(response.content);
-        }
-        if(response.type == "event") {
-          eventArray.push(response.content);
-        }
-      }
-      else
-      {
-        chrome.runtime.onMessage.removeListener();
-      }
-
-});
-   
 }
 
 
 function stopRecording(listener){
+<<<<<<< HEAD
   isRec = false;
   for (i = 0; i < contentArray.length; i++) { 
       append_to_json(eventArray[i], contentArray[i], "defaultName");
@@ -43,6 +29,11 @@ eventArray = [];
 
 
 
+=======
+	   chrome.runtime.sendMessage({type: "stop"}); //Starts replaying in a current tab
+}
+
+>>>>>>> Test
 function play(){
 
 	   chrome.runtime.sendMessage({trigger: "start"}); //Starts replaying in a current tab
@@ -71,7 +62,11 @@ else if(command == "input"){
 */
 }
 
+<<<<<<< HEAD
 
+=======
+/*  ---------------PERMESTA I BACKGROUNDA
+>>>>>>> Test
 function append_to_json(command, target, jsonName){
 
 	var value = null;
@@ -104,7 +99,7 @@ function append_to_json(command, target, jsonName){
   let isRec = false;
   var contentArray = [];
   var eventArray = [];
-   
+   */
   document.addEventListener('DOMContentLoaded', () =>{
   document.getElementById('record').addEventListener('click', startRecording);
   document.getElementById('stop').addEventListener('click',stopRecording);

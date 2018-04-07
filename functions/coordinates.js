@@ -1,7 +1,10 @@
-export function append_to_json(event, jsonName){
-	var x = event.clientX;
-	var y = event.clientY;
-		
+/*
+Is evento x ir y imam taip: 
+var x = event.clientX;
+var y = event.clientY;
+*/
+
+export function append_to_json(x, y, jsonName){
 	if(x === null || y === null)
 		return false;
 		
@@ -10,18 +13,22 @@ export function append_to_json(event, jsonName){
 		"Y":y
 	}
 	
-	var data = JSON.stringify(json);
+	var data = JSON.stringify(json); //Convert to JSON
 	
 	var oldJSON = localStorage.getItem(jsonName);
     if(oldJSON === null){
 		oldJSON = "";
 	}
-    localStorage.setItem(jsonName, oldJSON + data);
+	
+    localStorage.setItem(jsonName, oldJSON + data); //Save to localStorage
 }
 	
+//Naudojam localStorage, todel funkcija pasalinta
+/*
 	export function save(jsonName){
 		var json = localStorage.getItem(jsonName);
 		var storage = chrome.storage.sync;
 		
 		storage.set({jsonName:json}, function() {});
 	}
+	*/

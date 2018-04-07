@@ -13,13 +13,14 @@ export function append_to_json(x, y, jsonName){
 		"Y":y
 	}
 	
-	var data = JSON.stringify(json);
+	var data = JSON.stringify(json); //Convert to JSON
 	
 	var oldJSON = localStorage.getItem(jsonName);
     if(oldJSON === null){
 		oldJSON = "";
 	}
-    localStorage.setItem(jsonName, oldJSON + data);
+	
+    localStorage.setItem(jsonName, oldJSON + data); //Save to localStorage
 }
 	
 //Naudojam localStorage, todel funkcija pasalinta

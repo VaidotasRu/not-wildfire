@@ -49,6 +49,20 @@ else if(command == "input"){
 */
 }
 
+function Dashboard(){
+
+	/*var car = {
+		myliu:"labas",
+		nemyliu:"ate"
+	}*/
+	
+	var newWindow = window.open('Dashboard.html',null, 'height=620,width=610,scrollbars=yes,status=yes');
+	/*var JSONsome = JSON.stringify(car);
+	localStorage.setItem("love",JSONsome);
+	alert(localStorage.getItem("love"));*/
+	
+}
+
 /*  ---------------PERMESTA I BACKGROUNDA
 
 function append_to_json(command, target, jsonName){
@@ -84,9 +98,12 @@ function append_to_json(command, target, jsonName){
   var contentArray = [];
   var eventArray = [];
    */
+
+
   document.addEventListener('DOMContentLoaded', () =>{
   document.getElementById('record').addEventListener('click', startRecording);
   document.getElementById('stop').addEventListener('click',stopRecording);
   document.getElementById("play").addEventListener("click", play);
+  document.getElementById("dashboard").addEventListener("click", Dashboard);
 });
 

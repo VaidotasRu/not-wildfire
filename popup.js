@@ -17,7 +17,10 @@ function startRecording(){
 
 function stopRecording(listener){
 
-	   chrome.runtime.sendMessage({type: "stop"}); //Starts replaying in a current tab
+	chrome.runtime.sendMessage({type: "stop"}); //Starts replaying in a current tab
+	//var newWindow = window.open('StopRecordGUI.html',null, 'left = 640, top = 300, height=200,width=200,scrollbars=yes,status=yes');
+	var savedName = prompt("How would you like to name your Simulation log:", "Default");
+
 }
 
 
@@ -51,15 +54,18 @@ else if(command == "input"){
 
 function Dashboard(){
 
-	/*var car = {
+	var newWindow = window.open('Dashboard.html',null, 'height=620,width=610,scrollbars=yes,status=yes');
+	//-------PAMIRSAU KUR IKELTI, SORRY!---------------
+	var car = {
 		myliu:"labas",
 		nemyliu:"ate"
-	}*/
-	
-	var newWindow = window.open('Dashboard.html',null, 'height=620,width=610,scrollbars=yes,status=yes');
-	/*var JSONsome = JSON.stringify(car);
+	}
+	var JSONsome = JSON.stringify(car);
+	var splitedIntoArray = JSONsome.split(',');
 	localStorage.setItem("love",JSONsome);
-	alert(localStorage.getItem("love"));*/
+	localStorage.setItem("move",splitedIntoArray);
+	alert(localStorage.getItem("love"));
+	alert(localStorage.getItem("move"));
 	
 }
 

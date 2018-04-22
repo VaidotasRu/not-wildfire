@@ -4,7 +4,6 @@ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 
 	if(response.type == "start"){ // Start recording
 		isRec = true;
-		console.log("starting");
 	}
 
     if(isRec){
@@ -13,7 +12,6 @@ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 			isRec = false;
 		}
 		else{
-    		console.log(response.content + " irasytas");
         	if(response.type == "html") {
            		contentArray.push(response.content); // Saving data
         	}
@@ -28,22 +26,16 @@ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 			alert("There's nothing to save");
 		else{
 		var simulation;
-		console.log(localStorage.getItem(response.simName) + " rasta pagal rakta " + response.simName);
 		if (localStorage.getItem(response.simName) === null) { //checking if the name does not exist
-			console.log("SimName: " + response.simName);
 			simulation = response.simName;
-			/*for(var i = 0; i < contentArray.length; i++){
-				append_to_json(eventArray[i], contentArray[i], response.simName); // Saving data to local storage
-			}*/
 		}
 		else {
 			var number = defaultNumber();
 			simulation = "DefaultName" + number;
 			alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
-			//prompt("How would you like to name your Simulation log:", "Default");
 		}
 		for(var i = 0; i < contentArray.length; i++){
-				append_to_json(eventArray[i], contentArray[i], simulation);//response.simName); // Saving data to local storage
+				append_to_json(eventArray[i], contentArray[i], simulation); // Saving data to local storage
 			}
 		}
 	}

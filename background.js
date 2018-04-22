@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+//localStorage.clear();
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 
 var waitForPageLoad = false; // Stops replaying while page is loading
@@ -14,9 +14,6 @@ if(response.type == "loaded"){ // Indicates that page is loaded
 
 if(response.type == "start"){ // Start recording
 	isRec = true;
-	 contentArray = [];
-   eventArray = [];
-   valueArray = [];
 }
 
       if(isRec){
@@ -33,65 +30,36 @@ if(response.type == "start"){ // Start recording
 				}
 		        if(response.type == "stop") {
 					isRec = false;
-
-
-for(var i = 0; i < eventArray.length; i++){
-
-	append_to_json(eventArray[i], contentArray[i], valueArray[i], "defaultName"); // Saving data to local storage
-}
 				}
 }
+
+if(!isRec && response.type == "simName"){
+		RecordSimulation(response.simName);
+	}
+
+
 });
 
 var index; //Indexes for arrays containing commands positions and values.
-=======
 
-//localStorage.clear();
-chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
-
-	if(response.type == "start"){ // Start recording
-		isRec = true;
+function RecordSimulation(name) {
+	if (contentArray.length == 0)
+		alert("There's nothing to save");
+	else{
+	var simulation;
+	if (localStorage.getItem(name) === null) { //checking if the name does not exist
+		simulation = name;
 	}
-
-    if(isRec){
-
-    	if(response.type == "stop") {
-			isRec = false;
-		}
-		else{
-        	if(response.type == "html") {
-           		contentArray.push(response.content); // Saving data
-        	}
-        	if(response.type == "event") {
-          		eventArray.push(response.content);
-        	}
-    	}
-    }
-		
-	if(!isRec && response.type == "simName"){
-		if (contentArray.length == 0)
-			alert("There's nothing to save");
-		else{
-		var simulation;
-		if (localStorage.getItem(response.simName) === null) { //checking if the name does not exist
-			simulation = response.simName;
-		}
-		else {
-			var number = defaultNumber();
-			simulation = "DefaultName" + number;
-			alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
-		}
-		for(var i = 0; i < contentArray.length; i++){
-				append_to_json(eventArray[i], contentArray[i], simulation); // Saving data to local storage
-			}
+	else {
+		var number = defaultNumber();
+		simulation = "DefaultName" + number;
+		alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
+	}
+	for(var i = 0; i < contentArray.length; i++){
+			append_to_json(eventArray[i], contentArray[i], valueArray[i], simulation); // Saving data to local storage
 		}
 	}
-		
-
-  	if(response.type == "Play"){
-		assignValues();
-	}
-});
+}
 
 function defaultNumber() {
 	var lastNumber = localStorage.getItem("alldefaultnumbers");
@@ -105,17 +73,6 @@ function defaultNumber() {
     return lastNumber;
 }
 
-class Position {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-}
-var pos;
-var values;
-var commands;
-var index;
->>>>>>> SP35
 var injectedScript = []; // Scripts that are already injected in page
 var Commands = [];
 var PositionX = [];
@@ -166,17 +123,12 @@ function append_to_json(command, target, value, jsonName){
     if(oldJSON === null){
 		oldJSON = "";
 	}
-<<<<<<< HEAD
-=======
-    localStorage.setItem(jsonName, oldJSON + data);
-    contentArray = [];
-    eventArray = [];
-}
-	
->>>>>>> SP35
 
     localStorage.setItem(jsonName, oldJSON + data + ";");
-	}
+    contentArray = [];
+    eventArray = [];
+    valueArray = [];
+}
 	
   let isRec = false;
   var contentArray = [];

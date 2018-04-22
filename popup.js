@@ -1,10 +1,10 @@
 //import {convertToJSON} from './functions/record.js'
 
 function startRecording(){
-<<<<<<< HEAD
-    localStorage.clear(); // Reiks istrint kuomet galima bus skirti irasui varda
+/*<<<<<<< HEAD
+    //localStorage.clear(); // Reiks istrint kuomet galima bus skirti irasui varda
 =======
->>>>>>> SP35
+>>>>>>> SP35*/
     	   chrome.runtime.sendMessage({type: "start"}); // Sending message to background
 
 	chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script

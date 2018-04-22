@@ -1,7 +1,10 @@
 //import {convertToJSON} from './functions/record.js'
 
 function startRecording(){
+<<<<<<< HEAD
     localStorage.clear(); // Reiks istrint kuomet galima bus skirti irasui varda
+=======
+>>>>>>> SP35
     	   chrome.runtime.sendMessage({type: "start"}); // Sending message to background
 
 	chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script
@@ -15,7 +18,7 @@ function stopRecording(listener){
 	chrome.runtime.sendMessage({type: "stop"}); //Starts replaying in a current tab
 	//var newWindow = window.open('StopRecordGUI.html',null, 'left = 640, top = 300, height=200,width=200,scrollbars=yes,status=yes');
 	var savedName = prompt("How would you like to name your Simulation log:", "Default");
-
+  chrome.runtime.sendMessage({type: "simName", simName: savedName});
 }
 
 

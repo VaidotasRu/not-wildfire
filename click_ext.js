@@ -1,23 +1,8 @@
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
-	/*	alert(message.argument); //---------------IESKANT PAGAL POZICIJA PERDUODAMI KITOKIE ARGUMENTAI
+	if(message.type == "click"){
 
-		executed = true;
-	if(message.argument =="UP"){
-	$(":contains('UP')").click();
-
+		var elem = document.elementFromPoint(message.posX, message.posY);
+elem.click(); 
 	}
-if(message.argument =="DOWN"){
-	$(":contains('DOWN')").click();
-}
-*/
-
-//var elem = document.elementFromPoint(message.posX, message.posY); // x, y
-//elem.click();
-
-$(window).on('beforeunload', function(){
-alert('load');
-});
-
-
 });

@@ -1,36 +1,37 @@
 chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) { // Attaching event listeners to HTML body element
-	   if( request.message === "record" ) {
-         	var findBody = document.querySelector('body');
-  			findBody.addEventListener('click',findContent);
-			findBody.addEventListener('input',findContent);
 
-		}
+        //  alert('ms');
+
+          if (request.message === "record") {
+         	var findBody = document.querySelector('body');
+		findBody.addEventListener('click',findContent);
+        findBody.addEventListener('input', findContent);
+       }
       });
 
 function findContent(e){
-  chrome.runtime.sendMessage({ xPos: e.pageX, yPos: e.pageY, type: "html"});
-  chrome.runtime.sendMessage({ xPos: e.pageX, yPos: e.pageY, type: "event"});
- if(e.type != "input" && e.type != "URLchange"){
-	  chrome.runtime.sendMessage({ content: null, type: "value"}); // Clicks and many other events don't require "value" field
+  //  alert(e.type);
+ //   alert(e.pageX);
+   
+    if (e.type != "input") {
+        chrome.runtime.sendMessage({ content: e.type, xPos: e.clientX, yPos: e.clientY, value: null, type: "save" });
  }
  else{
- chrome.runtime.sendMessage({ content: e.target.value, type: "value"});
+        chrome.runtime.sendMessage({ content: e.type, xPos: e.clientX, yPos: e.clientY, value: e.target.value, type: "save" });
  }
   
 }
 
 window.onhashchange = recorddURLChange(); // Calls function each time page is reloaded (or URL is changed)
 
-function recorddURLChange()
-{	
+function recorddURLChange() {	
+   // alert('change');
 		chrome.runtime.sendMessage({type: "loaded"}); // Used in replaying. Indicates that page is loaded (alternative for a call back)
-		
-	  chrome.runtime.sendMessage({ content: window.location.href, type: "value"});
-  chrome.runtime.sendMessage({ content: "URLchange", type: "event"});
-  chrome.runtime.sendMessage({ content: null, type: "html"});
+        chrome.runtime.sendMessage({ content: "URLchange", xPos: 0, yPos: 0, value: window.location.href, type: "save" });
 
   var findBody = document.querySelector('body'); // Reataching event listeners to newly loaded page
-  			findBody.addEventListener('click',findContent(e));
-			  			findBody.addEventListener('input',findContent(e));		
+  			findBody.addEventListener('click',findContent);
+			  			findBody.addEventListener('input',findContent);		
 }
+

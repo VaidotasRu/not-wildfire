@@ -1,35 +1,72 @@
-//localStorage.clear();
-chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
+chrome.tabs.onCreated.addListener(function(tab) {   // Records creation of a tab
+
+  if(isRec){
+  eventArray.push("newTab");
+var id = tab.id;
+recordTabs.push(id);
+recordX.push(0);
+recordY.push(0);
+
+  valueArray.push(recordTabs.length -1);
+  }
+});
+
+chrome.tabs.onHighlighted.addListener(function(tabs) { // Records tab switch
+  if(isRec){
+	  var x = recordTabs.indexOf(parseInt(tabs.tabIds));
+
+		   eventArray.push("tabSwitch");
+           recordX.push(0);
+           recordY.push(0);
+  valueArray.push(x);
+  }		
+});
+
 
 var waitForPageLoad = false; // Stops replaying while page is loading
+chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 
 if(response.type == "loaded"){ // Indicates that page is loaded
 	waitForPageLoad = false; 
 }
 
   if(response.type == "Play"){ // Replaying
- injectScript("click", 226, 518, null);
- //assignValues();
+   replayTabs = [];
+  
+
+ scriptInjected = false;
+ waitForPageLoad = false;
+ chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) { //Sending message to content script
+     var activeTab = tabs[0];
+     replayTabs.push(activeTab.id);
+ });
+
+ assignValues();
 	}
 
 if(response.type == "start"){ // Start recording
+
+    contentArray = [];
+    eventArray = [];
+    valueArray = [];
+recordTabs = [];
 	isRec = true;
+	var tabId;
+			chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+   tabId = tabs[0].id;		
+   recordTabs.push(tabId);
+
+		});  
 }
 
       if(isRec){
-        if(response.type == "event") {  // Saving data
-			x.push(response.xPos);
-	   		y.push(response.yPos);
+        if(response.type == "save") {  // Saving data
+            eventArray.push(response.content);
+            recordX.push(response.xPos);
+            recordY.push(response.yPos);
+            valueArray.push(response.value);
         }   
-   if(response.type == "html") {
-            x.push(response.xPos);
-	   		y.push(response.yPos);
-	   y.push(response.content.clienty);
-        }
 
-		        if(response.type == "value") {
-          valueArray.push(response.content);
-				}
 		        if(response.type == "stop") {
 					isRec = false;
 				}
@@ -45,7 +82,7 @@ if(!isRec && response.type == "simName"){
 var index; //Indexes for arrays containing commands positions and values.
 
 function RecordSimulation(name) {
-	if (x.length == 0)
+    if (eventArray.length == 0)
 		alert("There's nothing to save");
 	else{
 	var simulation;
@@ -57,9 +94,9 @@ function RecordSimulation(name) {
 		simulation = "DefaultName" + number;
 		alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
 	}
-	for(var i = 0; i < x.length; i++){
-			//append_to_json(eventArray[i], contentArray[i], valueArray[i], simulation); // Saving data to local storage
-		append_to_json(x[i], y[i], simulation);
+
+	for(var i = 0; i < eventArray.length; i++){
+		append_to_json(eventArray[i], recordX[i], recordY[i], valueArray[i], simulation); // Saving data to local storage
 		}
 	}
 }
@@ -76,14 +113,17 @@ function defaultNumber() {
     return lastNumber;
 }
 
-var injectedScript = []; // Scripts that are already injected in page
+var scriptInjected = false; // Scripts that are already injected in page
 var Commands = [];
 var PositionX = [];
 var PositionY = [];
 var Values = [];
+var Replaying = false;
+var recordTabs = [];
+var replayTabs = [];
 
 function DataParsing(){
-	var temp_records = (localStorage.getItem("defaultName")).split(";");
+	var temp_records = (localStorage.getItem("Default")).split(";");
 
 for(var i = 0; i < temp_records.length-1; i++)
 {
@@ -101,23 +141,19 @@ function assignValues(){
 
 DataParsing();
 
-		    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
- chrome.tabs.executeScript(tabs[0].id, {file: "jquery-3.3.1.js"}); // Line is not added to injectScript, to prevent multiple library injections
-  });
-
 callInjection(0); //Starting simulation
 	
 }
 
-/*
-function append_to_json(command, target, value, jsonName){
+function append_to_json(command, x,y , value, jsonName){
 
 	if(command === null)
 		return false;
 		
 	var json = {
 		"Command":command,
-		"Target":target,
+        "X": x,
+        "Y": y,
 		"Value":value
 	}
 	
@@ -129,65 +165,39 @@ function append_to_json(command, target, value, jsonName){
 	}
 
     localStorage.setItem(jsonName, oldJSON + data + ";");
-    contentArray = [];
-    eventArray = [];
-    valueArray = [];
-}
-*/
-function append_to_json(x, y, jsonName){
-	if(x === null || y === null)
-		return false;
-		
-	var json = {
-		"X":x,
-		"Y":y
-	}
-	
-	var data = JSON.stringify(json); //Convert to JSON
-	
-	var oldJSON = localStorage.getItem(jsonName);
-    if(oldJSON === null){
-		oldJSON = "";
-	}
-	
-    localStorage.setItem(jsonName, oldJSON + data + ";"); //Save to localStorage
-	 contentArray = [];
-    eventArray = [];
-    valueArray = [];
+
 }
 	
   let isRec = false;
-  var contentArray = [];
-
-var x = [];
-var y = [];
-
+  //var contentArray = [];
+var recordX = [];
+var recordY = [];
   var eventArray = [];
   var valueArray = [];
-
-
-// ---------------PAKOLKAS NEREIKIA. REIKES KAI ATKARTOSIM VEIKSMUS PER KELIS TABUS
-var func = function(x){
-//chrome.tabs.create({'url': "http://www.9gag.com"}, function(tab){ 
-alert(x);
-		    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+ 
+function injectScript(){		   
+		   chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
     var activeTab = tabs[0];
-				chrome.tabs.executeScript(activeTab.id, {file: "Replay_Basic.js"});
-	   chrome.tabs.sendMessage(activeTab.id, {"argument": x});
+			chrome.tabs.executeScript(activeTab.id, {file: "Replay.js"});
+
   });
 
-	};
- 
-
+}
 
 // Function is recursively called with one second gaps until it iterates through all commands
 function callInjection(index){
+	
+
+	if(!scriptInjected){
+		injectScript();
+		scriptInjected = true;
+    }
 if(!waitForPageLoad) 
 {
- injectScript(Commands[index], 0, 0, Values[index]);	
+    sendMessage(Commands[index], PositionX[index], PositionY[index], Values[index]);	
 
 	 setTimeout(function(){
-		 	 if(index < commands.length){
+		 	 if(index < Commands.length){
 			 callInjection(index+1);	 
 	 			 }	 
 	 }, 1000);		 	
@@ -196,35 +206,46 @@ if(!waitForPageLoad)
 		 setTimeout(function(){
 			 callInjection(index);	 
 	 }, 500);	
+    }
+
 }
+
+// Sends message with command positions and value to injected script
+function sendMessage(command, posX, posY, value) {
+    if (command == "URLchange" || command == "newTab") {
+        scriptInjected = false;
+        waitForPageLoad = true;
+    }
+    if (command == "tabSwitch") {
+        switchTab(value);
+    } else if (command == "newTab") {
+        createNewTab();
+    } else {
+        chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) { //Sending message to content script
+            var activeTab = tabs[0];
+            chrome.tabs.sendMessage(activeTab.id, { "type": command, "posX": posX, "posY": posY, "value": value });
+        });
+    }
 }
 
 
+function createNewTab(){
 
-// Injects script into current tab
-function injectScript(command, posX, posY, value)
-{				
+    chrome.tabs.create({ 'url': "https://www.google.lt/"}, function(tab){ 
+        replayTabs.push(tab.id);
+  });
 
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Passing commands and values
-    var activeTab = tabs[0];	
-if(jQuery.inArray(command, injectedScript) !== -1)  // Checks if script is already added to page
-{
-		chrome.tabs.sendMessage(activeTab.id, {"type": command,"posX": posX, "posY": posY, "value": value}); // If yes
-}
-else {
-injectedScript.push(command);
-if(command == "URLchange")
-{
-	injectedScript = [];
-waitForPageLoad = true;
 	}
 
-	var file = command.concat("_ext.js");				
-				chrome.tabs.executeScript(activeTab.id, {file: file}, function(){
-										chrome.tabs.sendMessage(activeTab.id, {"type": command,"posX": posX, "posY": posY, "value": value});
-					});
-}
-  });
-}
+function switchTab(tabIndex) {
+    var index = parseInt(tabIndex);
+
+    tabId = replayTabs[index];
+    chrome.tabs.get(tabId, function (tab) {
+        chrome.tabs.highlight({ 'tabs': tab.index }, function () { });
+    });   
+	}
+ 
+
 
 

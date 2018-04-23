@@ -1,15 +1,12 @@
 //import {convertToJSON} from './functions/record.js'
 
 function startRecording(){
-/*<<<<<<< HEAD
-    //localStorage.clear(); // Reiks istrint kuomet galima bus skirti irasui varda
-=======
->>>>>>> SP35*/
+
     	   chrome.runtime.sendMessage({type: "start"}); // Sending message to background
 
 	chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script
     var activeTab = tabs[0];
-   chrome.tabs.sendMessage(activeTab.id, {"message": "record"});
+ chrome.tabs.sendMessage(activeTab.id, {"message": "record"});
   });
 }
 
@@ -24,7 +21,12 @@ function stopRecording(listener){
 
 function play(){
 	   chrome.runtime.sendMessage({type: "Play"}); //Starts replaying in a current tab
-	       	   
+	//chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script
+//alert(tabs[0].id);
+	//});
+
+
+	   
 }
 
 function Dashboard(){

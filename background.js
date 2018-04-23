@@ -18,13 +18,12 @@ if(response.type == "start"){ // Start recording
 
       if(isRec){
         if(response.type == "event") {  // Saving data
-          //eventArray.push(response.content);
-			x.push(response.content.clientX);
-	   y.push(response.content.clienty);
+			x.push(response.xPos);
+	   		y.push(response.yPos);
         }   
    if(response.type == "html") {
-          // contentArray.push(response.content); 
-	   x.push(response.content.clientX);
+            x.push(response.xPos);
+	   		y.push(response.yPos);
 	   y.push(response.content.clienty);
         }
 

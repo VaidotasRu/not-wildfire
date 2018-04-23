@@ -9,8 +9,8 @@ chrome.runtime.onMessage.addListener(
       });
 
 function findContent(e){
-  chrome.runtime.sendMessage({ content: e.target.innerHTML, type: "html"});
-  chrome.runtime.sendMessage({ content: e.type, type: "event"});
+  chrome.runtime.sendMessage({ xPos: e.pageX, yPos: e.pageY, type: "html"});
+  chrome.runtime.sendMessage({ xPos: e.pageX, yPos: e.pageY, type: "event"});
  if(e.type != "input" && e.type != "URLchange"){
 	  chrome.runtime.sendMessage({ content: null, type: "value"}); // Clicks and many other events don't require "value" field
  }
@@ -31,6 +31,6 @@ function recorddURLChange()
   chrome.runtime.sendMessage({ content: null, type: "html"});
 
   var findBody = document.querySelector('body'); // Reataching event listeners to newly loaded page
-  			findBody.addEventListener('click',findContent);
-			  			findBody.addEventListener('input',findContent);		
+  			findBody.addEventListener('click',findContent(e));
+			  			findBody.addEventListener('input',findContent(e));		
 }

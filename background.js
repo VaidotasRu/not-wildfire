@@ -2,22 +2,22 @@ chrome.tabs.onCreated.addListener(function(tab) {   // Records creation of a tab
 
   if(isRec){
   eventArray.push("newTab");
-  contentArray.push("");
 var id = tab.id;
 recordTabs.push(id);
-  valueArray.push(recordTabs.length -1);
+recordX.push(0);
+recordY.push(0);
 
+  valueArray.push(recordTabs.length -1);
   }
 });
 
 chrome.tabs.onHighlighted.addListener(function(tabs) { // Records tab switch
   if(isRec){
-	  var x;
-
-  x = recordTabs.indexOf(parseInt(tabs.tabIds));
+	  var x = recordTabs.indexOf(parseInt(tabs.tabIds));
 
 		   eventArray.push("tabSwitch");
-  contentArray.push("");
+           recordX.push(0);
+           recordY.push(0);
   valueArray.push(x);
   }		
 });
@@ -60,17 +60,13 @@ recordTabs = [];
 }
 
       if(isRec){
-        if(response.type == "event") {  // Saving data
-          eventArray.push(response.content);
-
+        if(response.type == "save") {  // Saving data
+            eventArray.push(response.content);
+            recordX.push(response.xPos);
+            recordY.push(response.yPos);
+            valueArray.push(response.value);
         }   
-   if(response.type == "html") {
-           contentArray.push(response.content); 
-        }
 
-		        if(response.type == "value") {
-          valueArray.push(response.content);
-				}
 		        if(response.type == "stop") {
 					isRec = false;
 				}
@@ -86,7 +82,7 @@ if(!isRec && response.type == "simName"){
 var index; //Indexes for arrays containing commands positions and values.
 
 function RecordSimulation(name) {
-	if (contentArray.length == 0)
+    if (eventArray.length == 0)
 		alert("There's nothing to save");
 	else{
 	var simulation;
@@ -100,7 +96,7 @@ function RecordSimulation(name) {
 	}
 
 	for(var i = 0; i < eventArray.length; i++){
-		append_to_json(eventArray[i], contentArray[i], valueArray[i], simulation); // Saving data to local storage
+		append_to_json(eventArray[i], recordX[i], recordY[i], valueArray[i], simulation); // Saving data to local storage
 		}
 	}
 }
@@ -149,14 +145,15 @@ callInjection(0); //Starting simulation
 	
 }
 
-function append_to_json(command, target, value, jsonName){
+function append_to_json(command, x,y , value, jsonName){
 
 	if(command === null)
 		return false;
 		
 	var json = {
 		"Command":command,
-		"Target":target,
+        "X": x,
+        "Y": y,
 		"Value":value
 	}
 	
@@ -172,7 +169,9 @@ function append_to_json(command, target, value, jsonName){
 }
 	
   let isRec = false;
-  var contentArray = [];
+  //var contentArray = [];
+var recordX = [];
+var recordY = [];
   var eventArray = [];
   var valueArray = [];
  
@@ -195,7 +194,7 @@ function callInjection(index){
     }
 if(!waitForPageLoad) 
 {
- sendMessage(Commands[index], 0, 0, Values[index]);	
+    sendMessage(Commands[index], PositionX[index], PositionY[index], Values[index]);	
 
 	 setTimeout(function(){
 		 	 if(index < Commands.length){

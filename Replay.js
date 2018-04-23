@@ -9,8 +9,12 @@ elem.value = message.value;
 			}
 				if(message.type == "click"){
 		var elem = document.elementFromPoint(message.posX, message.posY);
+		
+		var result = elem.hasAttribute('href');
+		
+		if(!result){
 elem.click(); 
-	}
+				}}
 
 });
 

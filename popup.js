@@ -1,4 +1,3 @@
-//import {convertToJSON} from './functions/record.js'
 
 function startRecording(){
 

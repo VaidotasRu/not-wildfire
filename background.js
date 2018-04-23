@@ -18,11 +18,14 @@ if(response.type == "start"){ // Start recording
 
       if(isRec){
         if(response.type == "event") {  // Saving data
-          eventArray.push(response.content);
-
+          //eventArray.push(response.content);
+			x.push(response.content.clientX);
+	   y.push(response.content.clienty);
         }   
    if(response.type == "html") {
-           contentArray.push(response.content); 
+          // contentArray.push(response.content); 
+	   x.push(response.content.clientX);
+	   y.push(response.content.clienty);
         }
 
 		        if(response.type == "value") {
@@ -43,7 +46,7 @@ if(!isRec && response.type == "simName"){
 var index; //Indexes for arrays containing commands positions and values.
 
 function RecordSimulation(name) {
-	if (contentArray.length == 0)
+	if (x.length == 0)
 		alert("There's nothing to save");
 	else{
 	var simulation;
@@ -55,8 +58,9 @@ function RecordSimulation(name) {
 		simulation = "DefaultName" + number;
 		alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
 	}
-	for(var i = 0; i < contentArray.length; i++){
-			append_to_json(eventArray[i], contentArray[i], valueArray[i], simulation); // Saving data to local storage
+	for(var i = 0; i < x.length; i++){
+			//append_to_json(eventArray[i], contentArray[i], valueArray[i], simulation); // Saving data to local storage
+		append_to_json(x[i], y[i], simulation);
 		}
 	}
 }
@@ -106,6 +110,7 @@ callInjection(0); //Starting simulation
 	
 }
 
+/*
 function append_to_json(command, target, value, jsonName){
 
 	if(command === null)
@@ -129,9 +134,35 @@ function append_to_json(command, target, value, jsonName){
     eventArray = [];
     valueArray = [];
 }
+*/
+function append_to_json(x, y, jsonName){
+	if(x === null || y === null)
+		return false;
+		
+	var json = {
+		"X":x,
+		"Y":y
+	}
+	
+	var data = JSON.stringify(json); //Convert to JSON
+	
+	var oldJSON = localStorage.getItem(jsonName);
+    if(oldJSON === null){
+		oldJSON = "";
+	}
+	
+    localStorage.setItem(jsonName, oldJSON + data + ";"); //Save to localStorage
+	 contentArray = [];
+    eventArray = [];
+    valueArray = [];
+}
 	
   let isRec = false;
   var contentArray = [];
+
+var x = [];
+var y = [];
+
   var eventArray = [];
   var valueArray = [];
 

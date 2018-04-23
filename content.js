@@ -9,8 +9,8 @@ chrome.runtime.onMessage.addListener(
       });
 
 function findContent(e){
-  chrome.runtime.sendMessage({ content: e.target.innerHTML, type: "html"});
-  chrome.runtime.sendMessage({ content: e.type, type: "event"});
+  chrome.runtime.sendMessage({ content: e, type: "html"});
+  chrome.runtime.sendMessage({ content: e, type: "event"});
  if(e.type != "input" && e.type != "URLchange"){
 	  chrome.runtime.sendMessage({ content: null, type: "value"}); // Clicks and many other events don't require "value" field
  }

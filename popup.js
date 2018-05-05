@@ -14,7 +14,10 @@ function stopRecording(listener){
 	chrome.runtime.sendMessage({type: "stop"}); //Starts replaying in a current tab
 	//var newWindow = window.open('StopRecordGUI.html',null, 'left = 640, top = 300, height=200,width=200,scrollbars=yes,status=yes');
 	var savedName = prompt("How would you like to name your Simulation log:", "Default");
-  chrome.runtime.sendMessage({type: "simName", simName: savedName});
+	if (savedName === null)
+		chrome.runtime.sendMessage({type: "canceled"});
+	else
+  		chrome.runtime.sendMessage({type: "simName", simName: savedName});
 }
 
 

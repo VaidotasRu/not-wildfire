@@ -72,8 +72,14 @@ recordTabs = [];
 				}
 }
 
+if(!isRec && response.type == "canceled" && eventArray.length != 0){
+	alert("Simulation has not been saved");
+	EmptyArrays();
+}
+
 if(!isRec && response.type == "simName"){
 		RecordSimulation(response.simName);
+		EmptyArrays();
 	}
 
 
@@ -99,6 +105,14 @@ function RecordSimulation(name) {
 		append_to_json(eventArray[i], recordX[i], recordY[i], valueArray[i], simulation); // Saving data to local storage
 		}
 	}
+}
+
+function EmptyArrays()
+{
+	contentArray = [];
+    eventArray = [];
+    valueArray = [];
+recordTabs = [];
 }
 
 function defaultNumber() {
@@ -170,8 +184,8 @@ function append_to_json(command, x,y , value, jsonName){
 	
   let isRec = false;
   //var contentArray = [];
-var recordX = [];
-var recordY = [];
+  var recordX = [];
+  var recordY = [];
   var eventArray = [];
   var valueArray = [];
  

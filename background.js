@@ -41,6 +41,8 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         eventArray = [];
         valueArray = [];
         recordTabs = [];
+        recordX = [];
+        recordY = [];
         isRec = true;
         var tabId;
         chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -52,11 +54,12 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
     if (isRec) {
         if (response.type == "save") {  // Saving data
-            if (response.content == "scroll") {
-                checkScroll(response.xPos, response.yPos) // Saving of scroll...
+
+            if (response.content == "scroll") { // Prevention of unnecessary scroll input and resize events saving
+                checkScroll(response.xPos, response.yPos) 
             }
             else if (response.content == "input") {
-                checkInout(response.xPos, response.yPos, response.value); //... and input is implemented differentlly from other events
+                checkInput(response.xPos, response.yPos, response.value); 
             }
             else {
                 eventArray.push(response.content); // Standart event saving
@@ -168,6 +171,35 @@ chrome.tabs.onHighlighted.addListener(function (tabs) { // Records tab switch
     }
 });
 
+// Prevents saving of many scroll events in a row. At the end only one event with last scroll position is saved
+function checkScroll(posX, posY) {
+    if (eventArray[eventArray.length - 1] == "scroll") { // Cheking if previous event also was a scroll
+        recordX[recordX.length - 1] = posX; // if yes - we overwrite scroll positions
+        recordY[recordY.length - 1] = posY;
+    }
+    else {
+        eventArray.push("scroll"); // in other case we just save event normally
+        recordX.push(posX);
+        recordY.push(posY);
+        valueArray.push("");
+    }
+
+
+}
+
+// Prevents saving of many input events in a row. At the end only one event with final input value is saved
+function checkInput(posX, posY, value) {
+
+    if (eventArray[eventArray.length - 1] == "input" && recordX[recordX.length - 1] == posX && recordY[recordY.length - 1] == posY) { // cheking if previous event also was an input..
+        valueArray[valueArray.length - 1] = value;    // if yes, we just overwrite previous last value in ValueArray                                                                                        // and if it has same coordinates
+    }
+    else {
+        eventArray.push("input"); // in other case we save input event normally
+        recordX.push(posX);
+        recordY.push(posY);
+        valueArray.push(value);
+    }
+}
 
 // REPLAYING
 
@@ -274,38 +306,6 @@ function switchTab(tabIndex) {
     });   
 	}
 
-// Prevents saving of many scroll events in a row. At the end only one event with last scroll position is saved
-function checkScroll(posX, posY) {
-
-    if (eventArray[eventArray.length - 1] == "scroll") { // Cheking if previous event also was a scroll
-        PositionX[PositionX.length - 1] = posX; // if yes - we overwrite scroll positions
-        PositionY[PositionY.length - 1] = posY;
-    }
-    else {
-        eventArray.push("scroll"); // in other case we just save event normally
-        PositionX.push(posX);
-        PositionY.push(posY);
-        valueArray.push("");
-    }
-
-
-}
-
-// Prevents saving of many input events in a row. At the end only one event with final input value is saved
-function checkInout(posX, posY, value) {
-
-    if (eventArray[eventArray.length - 1] == "input" && PositionX[PositionX.length - 1] == posX && PositionY[PositionY.length - 1] == posY) { // cheking if previous event also was an input..
-        valueArray[valueArray.length - 1] = value;    // if yes, we just overwrite previous last value in ValueArray                                                                                        // and if it has same coordinates
-    }
-    else {
-        eventArray.push("input"); // in other case we save input event normally
-        PositionX.push(posX);
-        PositionY.push(posY);
-        valueArray.push(value);
-    }
-
-
-}
 
 
 

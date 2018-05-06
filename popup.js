@@ -3,8 +3,6 @@ function startRecording(){
 
     	   chrome.runtime.sendMessage({type: "start"}); // Sending message to background
 
-
-
 	chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script
     var activeTab = tabs[0];
  chrome.tabs.sendMessage(activeTab.id, {"message": "record"});

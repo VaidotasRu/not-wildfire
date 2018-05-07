@@ -74,9 +74,16 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         }
     }
 
-    if (!isRec && response.type == "simName") {
-        SaveSimulationRecord(response.simName);
-    }
+
+if(!isRec && response.type == "canceled" && eventArray.length != 0){
+	alert("Simulation has not been saved");
+	EmptyArrays();
+}
+
+if(!isRec && response.type == "simName"){
+		SaveSimulationRecord(response.simName);
+		EmptyArrays();
+	}
 
 
 });
@@ -106,6 +113,7 @@ function SaveSimulationRecord(name) {
 	}
 }
 
+
 // Appends data to local storage item. If item doesn't exist, it is created.
 function appendtoLocalStorageItem(command, x, y, value, itemName) {
 
@@ -128,6 +136,15 @@ function appendtoLocalStorageItem(command, x, y, value, itemName) {
 
     localStorage.setItem(itemName, oldItem + data + ";"); // Eah action is appended separately
 
+}
+
+function EmptyArrays()
+{
+    eventArray = [];
+    recordX = [];
+    recordY = [];
+    valueArray = [];
+recordTabs = [];
 }
 
 // Creates number for default name of simulation
@@ -275,12 +292,12 @@ function sendMessage(command, posX, posY, value) {
         scriptInjected = false;
         waitForPageLoad = true;
     }
-    if (command == "tabSwitch") {
+    if (command == "tabSwitch") { // TAb switches and openings are done from extension and don't require message sending to injected script
         switchTab(value);
     } else if (command == "newTab") {
         createNewTab();
     } else {
-        chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) { //Sending message to content script
+        chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) { //Sending message to injected script
             var activeTab = tabs[0];
             chrome.tabs.sendMessage(activeTab.id, { "type": command, "posX": posX, "posY": posY, "value": value });
         });

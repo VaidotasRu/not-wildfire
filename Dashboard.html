@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
 	<title>Getting Started Extension's Management</title>
@@ -12,16 +13,21 @@
 		  padding: 0 20px;
 		  background: salmon;
 		  border: none;
+			cursor: pointer;
+      outline: none;
 		}
 		button:hover {
 		  background: lightsalmon;
 		}
 	</style>
+	<script src="Dashboard.js"></script>
+	<script src="jquery-3.3.1.js"></script>
+	<script src="html2canvas.js"></script>
 </head>
 <body>
-	<button id="Dashboard">SIMULATION LOG</button>
-	<button id="Dashboard">EVENT LOG</button>
-	<button id="Dashboard">WORKFLOW EDITOR</button>
-	<button id="Dashboard">SETTINGS</button>
+	<button id="SL">SIMULATION LOG</button>
+	<button id="EL">EVENT LOG</button>
+	<button id="WE" onclick="document.write(5 + 6)">WORKFLOW EDITOR</button>
+	<button id="settings">SETTINGS</button>
 </body>
 </html>

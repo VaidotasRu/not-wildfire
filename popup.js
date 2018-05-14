@@ -1,6 +1,7 @@
 
 function startRecording(){
 
+
   chrome.runtime.sendMessage({type: "start"}); // Sending message to background
 
 	chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script
@@ -24,10 +25,9 @@ function stopRecording(listener){
 
 
 function play(){
-	   chrome.runtime.sendMessage({type: "Play"}); //Starts replaying in a current tab
-	//chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script
-//alert(tabs[0].id);
-	//}); 
+  
+	   chrome.runtime.sendMessage({type: "Play"}); //Starts replaying in a current tab	   
+
 }
 
 function Dashboard(){

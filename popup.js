@@ -1,12 +1,15 @@
 
 function startRecording(){
 
-    	   chrome.runtime.sendMessage({type: "start"}); // Sending message to background
+
+  chrome.runtime.sendMessage({type: "start"}); // Sending message to background
 
 	chrome.tabs.query({currentWindow: true, active: true}, function (tabs){ //Sending message to content script
     var activeTab = tabs[0];
- chrome.tabs.sendMessage(activeTab.id, {"message": "record"});
-  });
+ 	chrome.tabs.sendMessage(activeTab.id, {"message": "record"});
+	});
+	var record = document.getElementById('record');
+	record.style.backgroundColor = "lightGreen";
 }
 
 function stopRecording(listener){
@@ -22,7 +25,9 @@ function stopRecording(listener){
 
 
 function play(){
+  
 	   chrome.runtime.sendMessage({type: "Play"}); //Starts replaying in a current tab	   
+
 }
 
 function Dashboard(){

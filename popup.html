@@ -22,7 +22,7 @@
         display: flex;
         justify-content: space-between;
       }
-      button {
+      .buttons button {
 		  margin-top: 10px;
 		  margin-right: 10px;
 		  margin-left: 10px;
@@ -31,12 +31,12 @@
 		  font-weight: bold;
 		  padding: 0 20px;
 		  background: salmon;
-
 		  border-color: transparent;
       cursor: pointer;
       outline: none;
-      display:block;
+      display:inline-block;
       clear: both;
+      transition: all 0.5s;
 		}
 		button:hover {
 		  background: lightsalmon;
@@ -45,19 +45,19 @@
 
     button:active{
       background: red;
-      border-color: black;
+      border-color: grey;
     }
+
 
     input{
       margin-right: 10px;
-		  margin-left: 10px;
+		  margin-left: 20px;
       border: none;
       cursor: pointer;
       outline: none;
-      display:block;
+      display: inline;
       clear: both;
     }
-
     </style>
     <script src="popup.js"></script>
     <script src="jquery-3.3.1.js"></script>
@@ -65,14 +65,13 @@
 
   <body>
     <h1>Record-Play</h1>
-    <div id="container">
-
-      <!--<button id="record"> Record </button>-->
+    <div id="image_buttons">
       <input id="record" type="image" src="assets\128-128-arrowssssss.png"/>
       <input id="stop" type="image" src="assets\pause button.png"/>     
-      <button id="play"> Recreate  </button>
-      <!--<button id="stop"> Stop Recording  </button>-->
-      <button id="dashboard"> Dashboard  </button>
+    </div>
+    <div class="buttons">
+        <!--<button id="play"> Recreate  </button>-->
+        <button id="dashboard"> Dashboard  </button>
     </div>
   </body>
 </html>

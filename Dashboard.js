@@ -1,11 +1,47 @@
-import html2canvas from 'html2canvas';
 function workflow(){
-    /*html2canvas(document.body).then(function(canvas) {
-        // Export the canvas to its data URI representation
-        var base64image = canvas.toDataURL("image/png");
-        window.open(base64image , "_blank");
-    });*/
-    var savedName = prompt("How would you like to name your Simulation log:", "Default");
+
+    $('#action').toggle("show");
+    $('.dropdown').toggle("show");
+}
+
+function simulationLog(){
+
+  $('.SL_buttons').toggle("show");
+
+}
+
+
+
+function settings() {
+
+}
+
+function eventLog() {
+
+}
+
+function action(){
+
+  document.getElementById("myDropdown").classList.toggle("show");
+
+}
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+function play(){
+  chrome.runtime.sendMessage({type: "Play"}); //Starts replaying in a current tab
 }
 
 document.addEventListener('DOMContentLoaded', () =>{
@@ -13,4 +49,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     document.getElementById('EL').addEventListener('click', eventLog);
     document.getElementById("WE").addEventListener("click", workflow);
     document.getElementById("settings").addEventListener("click", settings);
+    document.getElementById('dropdownbtn').addEventListener('click', action);
+    document.getElementById('play').addEventListener('click', play);
   });
+

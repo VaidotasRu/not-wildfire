@@ -24,15 +24,15 @@ function stopRecording(listener){
 }
 
 
-function play(){
+/*function play(){
   
 	   chrome.runtime.sendMessage({type: "Play"}); //Starts replaying in a current tab	   
 
-}
+}*/
 
 function Dashboard(){
 
-	var newWindow = window.open('Dashboard.html',null, 'height=620,width=610,scrollbars=yes,status=yes');
+	var newWindow = window.open('Dashboard.html',null, 'height=640,width=640,scrollbars=yes,status=yes,top=50,left=450');
 
 	
 }
@@ -40,7 +40,7 @@ function Dashboard(){
   document.addEventListener('DOMContentLoaded', () =>{
   document.getElementById('record').addEventListener('click', startRecording);
   document.getElementById('stop').addEventListener('click',stopRecording);
-  document.getElementById("play").addEventListener("click", play);
+  //document.getElementById("play").addEventListener("click", play);
   document.getElementById("dashboard").addEventListener("click", Dashboard);
 });
 

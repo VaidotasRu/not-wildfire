@@ -18,8 +18,8 @@ elem.click();
                 if (message.type == "scroll") {
                     window.scrollTo(message.posX, message.posY);
                 }
-                if (message.type == "resize") {
-                    window.resizeTo(message.posX, message.posY);
-                }
+                if (message.type == "submit") {
+		var elem = document.elementFromPoint(message.posX, message.posY); 
+elem.submit();                  }
 });
 

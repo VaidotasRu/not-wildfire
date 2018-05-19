@@ -179,9 +179,11 @@ function defaultNumber() {
 
 // Detects url changes
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
+    if (info.status == 'complete') { // Event is fired for each iFrame
+        alert('done');
+    }
     if (isRec) {
         if (info.url != undefined) { // Event is fired for each iFrame
-          //  alert('go');
             recorddURLChange(info.url);
         injectContent();
 

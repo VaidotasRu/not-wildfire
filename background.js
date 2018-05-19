@@ -18,6 +18,7 @@ var simNames = []; // Names of all simulations which are saved in local storage
 var currentURL = "";
 var skipActionRecord = false; // Allows to separate url change record from page reload
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
+
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
     if (response.type == "loaded") { // Indicates that page is loaded. Used during replaying
         waitForPageLoad = false;
@@ -45,6 +46,8 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         recordX = [];
         recordY = [];
         isRec = true;
+        skipActionRecord = false;
+        currentURL = "";
         var tabId;
         chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
             currentURL = tabs[0].url;
@@ -72,14 +75,6 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
         if (response.type == "stop") {
             isRec = false;
-            var data = JSON.stringify(simNames);
-
-            var oldItem = localStorage.getItem('nameOfSim');
-            if (oldItem === null) {
-                oldItem = "";
-            }
-
-            localStorage.setItem('nameOfSim', oldItem + data + ";");
         }
     }
 
@@ -89,7 +84,7 @@ if(!isRec && response.type == "canceled" && eventArray.length != 0){
 	EmptyArrays();
 }
 
-if(!isRec && response.type == "simName"){
+    if (!isRec && response.type == "simName") {
 		SaveSimulationRecord(response.simName);
 		EmptyArrays();
 	}
@@ -110,19 +105,28 @@ function SaveSimulationRecord(name) {
     var jsonNames;
 	if (localStorage.getItem(name) === null) { //checking if the name does not exist
         simulation = name;
+
         jsonNames = JSON.parse(localStorage.getItem('namesOfSim'));
+        if (jsonNames == null) {
+            jsonNames = [];
+        }
         jsonNames.push(simulation);
+
         localStorage.setItem('namesOfSim', JSON.stringify(jsonNames));
 	}
 	else {
 		var number = defaultNumber();
         simulation = "DefaultName" + number;
         jsonNames = JSON.parse(localStorage.getItem('namesOfSim'));
+        if (jsonNames == null) {
+            jsonNames = [];
+        }
         jsonNames.push(simulation);
-        localStorage.setItem('namesOfSim', JSON.stringify(jsonNames));
-		alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
-	}
 
+        localStorage.setItem('namesOfSim', JSON.stringify(jsonNames));
+
+		alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
+    }
     for (var i = 0; i < eventArray.length; i++) { // Eah action will be appended to local storage item separately
 		appendtoLocalStorageItem(eventArray[i], recordX[i], recordY[i], valueArray[i], simulation); 
 		}
@@ -131,7 +135,6 @@ function SaveSimulationRecord(name) {
 
 // Appends data to local storage item. If item doesn't exist, it is created.
 function appendtoLocalStorageItem(command, x, y, value, itemName) {
-
     if (command === null)
         return false;
 

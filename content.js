@@ -1,11 +1,8 @@
-var targets = []; // array of input fields which has event listener attached to them
-		   var body = document.querySelector('body');
+var body = document.querySelector('body');
               body.addEventListener('click', findContent);
               body.addEventListener('input', findContent);
-
 			                body.addEventListener('submit', findContent);
 
-              var body = document.querySelector('body');
               chrome.runtime.sendMessage({ content: "scroll", xPos: body.scrollLeft, yPos: body.scrollTop, value: null, type: "save" });	
 
 function findContent(e){

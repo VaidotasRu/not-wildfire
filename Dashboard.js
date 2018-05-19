@@ -41,6 +41,7 @@ function addBtn(type){
    /* element.onclick = function() { // Note this is a function
       alert("blabla");
     };*/
+
     $("#simLog").append(element);
 //    var foo = document.getElementsByClassName("SL_buttons");
     //Append the element in page (in span).  

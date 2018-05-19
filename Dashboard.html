@@ -8,7 +8,13 @@
 <script src="jquery-3.3.1.js"></script>
 <script src="html2canvas.js"></script>
 <body>
-	<div class="toolbar">
+    <style>
+        #simLog {
+            max-width: 100%;
+            height: 100%;
+        }
+    </style>
+    <div class="toolbar">
 		<button id="SL" class="primary">SIMULATION LOG</button>
 		<button id="EL" class="primary">EVENT LOG</button>
 		<button id="WE" class="primary">WORKFLOW EDITOR</button>
@@ -17,7 +23,7 @@
 	<!--<div class="WE_buttons">
 			<button id="action" class="secondary">Action</button>
 	</div>-->
-	<div id ="simLog" class="SL_buttons" >
+	<div id ="simLog" class="SL_buttons">
 			<button id="play" class="SL_buttons">Play</button>
 	</div>
 	<div class="dropdown">

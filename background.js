@@ -15,6 +15,7 @@ var recordY = [];    // REcording data is saved here temporarely before it will 
 var eventArray = []; //
 var valueArray = []; //
 
+var alarmName;
 
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
@@ -34,7 +35,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 		
 
         StartReplay();
-		chrome.alarms.create("aliarmas", {delayInMinutes: 0.1, periodInMinutes: 0.1});
+		chrome.alarms.create(alarmName, {when: Date.now() + 3000, periodInMinutes: 0.1});
     }
 
     if (response.type == "start") { // Start recording
@@ -84,6 +85,7 @@ if(!isRec && response.type == "canceled" && eventArray.length != 0){
 
 if(!isRec && response.type == "simName"){
 		SaveSimulationRecord(response.simName);
+		alarmName = response.simName;
 		EmptyArrays();
 	}
 

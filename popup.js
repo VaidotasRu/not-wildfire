@@ -25,7 +25,7 @@ function stopRecording(listener){
 
 
 function play(){
-  
+		
 	   chrome.runtime.sendMessage({type: "Play"}); //Starts replaying in a current tab	   
 
 }
@@ -43,4 +43,5 @@ function Dashboard(){
   document.getElementById("play").addEventListener("click", play);
   document.getElementById("dashboard").addEventListener("click", Dashboard);
 });
+
 

@@ -15,9 +15,9 @@ var recordY = [];    // REcording data is saved here temporarely before it will 
 var eventArray = []; //
 var valueArray = []; //
 
+
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
-
     if (response.type == "loaded") { // Indicates that page is loaded. Used during replaying
         waitForPageLoad = false;
     }
@@ -31,8 +31,10 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
             var activeTab = tabs[0];
             replayTabs.push(activeTab.id);
         });
+		
 
         StartReplay();
+		chrome.alarms.create("aliarmas", {delayInMinutes: 0.1, periodInMinutes: 0.1});
     }
 
     if (response.type == "start") { // Start recording
@@ -86,6 +88,11 @@ if(!isRec && response.type == "simName"){
 	}
 
 
+});
+
+
+chrome.alarms.onAlarm.addListener(function( alarm ) {
+  StartReplay();
 });
 
 

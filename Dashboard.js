@@ -1,16 +1,51 @@
 function workflow(){
 
-    $('#action').toggle("show");
-    $('.dropdown').toggle("show");
+    $('.dropdown').show('show');
+    $('.SL_buttons').hide();
+
 }
 
 function simulationLog(){
 
-  $('.SL_buttons').toggle("show");
+  $('.dropdown').hide();
+  $('.SL_buttons').show('show');
+
+  var namesOfSimulations = JSON.parse(localStorage.getItem('namesOfSim'));
+  /*for(var i = 0; i < namesOfSimulations.length; i++){
+
+    btn[i] = document.createElement('BUTTON');
+    $(btn[i]).attr('class', 'SL_buttons');
+    $(btn[i]).attr('id', namesOfSimulations[i]);
+    $(btn[i]).attr('name', namesOfSimulations[i]);
+    $(btn[i]).attr('value', namesOfSimulations[i]);
+    btn[i].value = namesOfSimulations[i];
+
+  }*/
+
+  for(var i = 0; i < namesOfSimulations.length; i++)
+  {
+    addBtn(namesOfSimulations[i]);
+  }
 
 }
 
+function addBtn(type){
 
+    //Create an input type dynamically.   
+    var element = document.createElement("button");
+    //Assign different attributes to the element. 
+    element.id = type;
+    element.value = type; // Really? You want the default value to be the type string?
+    element.name = type; // And the name too?
+   /* element.onclick = function() { // Note this is a function
+      alert("blabla");
+    };*/
+  
+    var foo = document.getElementsByClassName("SL_buttons");
+    //Append the element in page (in span).  
+    foo.appendChild(element);
+  
+}
 
 function settings() {
 
@@ -26,7 +61,7 @@ function action(){
 
 }
 
-window.onclick = function(event) {
+window.onclick = function(event) { //retracts dropdown button if pressed out side of it
   if (!event.target.matches('.dropbtn')) {
 
     var dropdowns = document.getElementsByClassName("dropdown-content");
@@ -50,6 +85,6 @@ document.addEventListener('DOMContentLoaded', () =>{
     document.getElementById("WE").addEventListener("click", workflow);
     document.getElementById("settings").addEventListener("click", settings);
     document.getElementById('dropdownbtn').addEventListener('click', action);
-    document.getElementById('play').addEventListener('click', play);
+    //document.getElementById('play').addEventListener('click', play);
   });
 

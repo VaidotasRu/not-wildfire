@@ -14,7 +14,8 @@ var recordX = [];    //
 var recordY = [];    // REcording data is saved here temporarely before it will be uploaded to local storage
 var eventArray = []; //
 var valueArray = []; //
-
+var simNames = [];
+localStorage.setItem('namesOfSim', JSON.stringify(simNames));
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
@@ -97,13 +98,20 @@ function SaveSimulationRecord(name) {
     if (eventArray.length == 0)
 		alert("There's nothing to save");
 	else{
-	var simulation;
+    var simulation;
+    var jsonNames;
 	if (localStorage.getItem(name) === null) { //checking if the name does not exist
-		simulation = name;
+        simulation = name;
+        jsonNames = JSON.parse(localStorage.getItem('namesOfSim'));
+        jsonNames.push(simulation);
+        localStorage.setItem('namesOfSim', JSON.stringify(jsonNames));
 	}
 	else {
 		var number = defaultNumber();
-		simulation = "DefaultName" + number;
+        simulation = "DefaultName" + number;
+        jsonNames = JSON.parse(localStorage.getItem('namesOfSim'));
+        jsonNames.push(simulation);
+        localStorage.setItem('namesOfSim', JSON.stringify(jsonNames));
 		alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
 	}
 

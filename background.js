@@ -15,7 +15,8 @@ var recordY = [];    // REcording data is saved here temporarely before it will 
 var eventArray = []; //
 var valueArray = []; //
 var simNames = [];
-localStorage.setItem('namesOfSim', JSON.stringify(simNames));
+var currentURL = "";
+
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
@@ -72,6 +73,14 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
         if (response.type == "stop") {
             isRec = false;
+            var data = JSON.stringify(simNames);
+
+            var oldItem = localStorage.getItem('nameOfSim');
+            if (oldItem === null) {
+                oldItem = "";
+            }
+
+            localStorage.setItem('nameOfSim', oldItem + data + ";");
         }
     }
 
@@ -168,10 +177,35 @@ function defaultNumber() {
     return lastNumber;
 }
 
+// Detects url changes
+chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
+    if (isRec) {
+        if (info.url != undefined) { // Event is fired for each iFrame
+          //  alert('go');
+            recorddURLChange(info.url);
+        injectContent();
+
+        }
+    }
+}); 
+
+if (sessionStorage.getItem("is_reloaded")) alert('Reloaded!');
+
+
+function recorddURLChange(url) {
+
+    eventArray.push("URLchange");
+    recordX.push(0);
+    recordY.push(0);
+    valueArray.push(url); 
+
+}
+
 // Records creation of new tab
 chrome.tabs.onCreated.addListener(function (tab) {  
 
     if (isRec) {
+        injectContent();
         eventArray.push("newTab");
         var id = tab.id;
 
@@ -245,8 +279,6 @@ Values[i] = object.Value;
 }
 }
 
-
-
 // Reads data from chrome.storage and selects commands, positions and values 
 function StartReplay(){
 
@@ -257,10 +289,9 @@ callInjection(0); //Starting simulation
 }
 
  //Injecting script which will trigger part of the events during simulation replay
-function injectScript(){		   
+function injectReplay(){		   
 		   chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-    var activeTab = tabs[0];
-    chrome.tabs.executeScript(activeTab.id, { file: "Replay.js" }, function () {
+    chrome.tabs.executeScript(tabs[0].id, { file: "Replay.js" }, function () {
         callInjection(index); // After script was injected, replay will continue
     });
 
@@ -274,7 +305,7 @@ function callInjection(param_index){
     index = param_index;
 
     if (!scriptInjected) { // Cheking if re-injection of Replay.js is required
-        injectScript();
+        injectReplay();
         scriptInjected = true;
     } else {
         if (!waitForPageLoad) {
@@ -331,7 +362,13 @@ function switchTab(tabIndex) {
     });   
 	}
 
+function injectContent() {
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+        chrome.tabs.executeScript(tabs[0].id, { file: "content.js" }, function () {
+        });
 
+    });
+}
 
 
 

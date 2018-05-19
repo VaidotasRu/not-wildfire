@@ -16,10 +16,9 @@ var eventArray = []; //
 var valueArray = []; //
 var simNames = [];
 var currentURL = "";
-
+var skipActionRecord = false;
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
-
     if (response.type == "loaded") { // Indicates that page is loaded. Used during replaying
         waitForPageLoad = false;
     }
@@ -48,9 +47,9 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         isRec = true;
         var tabId;
         chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-            tabId = tabs[0].id;
-            recordTabs.push(tabId); //Saving Id of first tab
-
+            currentURL = tabs[0].url;
+            recorddURLChange(tabs[0].url);
+            recordTabs.push(tabs[0].id); //Saving Id of first tab
         });
     }
 
@@ -130,7 +129,6 @@ function SaveSimulationRecord(name) {
 	}
 }
 
-
 // Appends data to local storage item. If item doesn't exist, it is created.
 function appendtoLocalStorageItem(command, x, y, value, itemName) {
 
@@ -179,20 +177,24 @@ function defaultNumber() {
 
 // Detects url changes
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
-    if (info.status == 'complete') { // Event is fired for each iFrame
-        alert('done');
-    }
     if (isRec) {
-        if (info.url != undefined) { // Event is fired for each iFrame
+        if (!skipActionRecord) {
+            if (info.status == 'complete' && info.url == undefined) { // Whne page is reloaded, url is undefined. status == complete means that page finished loading
+                recorddURLChange(currentURL);
+                injectContent();
+            }
+        }
+        else {
+            skipActionRecord = false;
+        }
+    
+    if (info.url != undefined && info.url != "chrome://newtab/") { // Event is fired for each iFrame
+        currentURL = info.url;
             recorddURLChange(info.url);
         injectContent();
-
         }
     }
 }); 
-
-if (sessionStorage.getItem("is_reloaded")) alert('Reloaded!');
-
 
 function recorddURLChange(url) {
 
@@ -207,7 +209,7 @@ function recorddURLChange(url) {
 chrome.tabs.onCreated.addListener(function (tab) {  
 
     if (isRec) {
-        injectContent();
+        skipActionRecord = true;
         eventArray.push("newTab");
         var id = tab.id;
 

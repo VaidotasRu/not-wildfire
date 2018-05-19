@@ -14,9 +14,9 @@ var recordX = [];    //
 var recordY = [];    // REcording data is saved here temporarely before it will be uploaded to local storage
 var eventArray = []; //
 var valueArray = []; //
-var simNames = [];
+var simNames = []; // Names of all simulations which are saved in local storage
 var currentURL = "";
-var skipActionRecord = false;
+var skipActionRecord = false; // Allows to separate url change record from page reload
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
     if (response.type == "loaded") { // Indicates that page is loaded. Used during replaying
@@ -178,22 +178,25 @@ function defaultNumber() {
 // Detects url changes
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
     if (isRec) {
-        if (!skipActionRecord) {
-            if (info.status == 'complete' && info.url == undefined) { // Whne page is reloaded, url is undefined. status == complete means that page finished loading
-                recorddURLChange(currentURL);
+
+        if (info.status == 'complete') { //status == complete means that page finished loading
+
+                    if (skipActionRecord) {
+                        skipActionRecord = false;
+                    }
+                    else {
+                        recorddURLChange(currentURL);
+                        injectContent();
+            }
+        }
+                if (info.url != undefined && info.url != "chrome://newtab/") { // Event is fired for each iFrame
+                skipActionRecord = true;
+                currentURL = info.url;
+                recorddURLChange(info.url);
                 injectContent();
             }
         }
-        else {
-            skipActionRecord = false;
-        }
     
-    if (info.url != undefined && info.url != "chrome://newtab/") { // Event is fired for each iFrame
-        currentURL = info.url;
-            recorddURLChange(info.url);
-        injectContent();
-        }
-    }
 }); 
 
 function recorddURLChange(url) {
@@ -209,10 +212,9 @@ function recorddURLChange(url) {
 chrome.tabs.onCreated.addListener(function (tab) {  
 
     if (isRec) {
-        skipActionRecord = true;
         eventArray.push("newTab");
         var id = tab.id;
-
+        skipActionRecord = true;
         recordTabs.push(id); // ID of each created tab is saved in array...
 
         recordX.push(0);

@@ -1,0 +1,51 @@
+body {
+    margin: 10px;
+    white-space: nowrap;
+  }
+
+  h1 {
+    font-size: 15px;
+  }
+
+  #container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+  .buttons button {
+        margin-top: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+        line-height: 25px;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 0 20px;
+        background: salmon;
+        border-color: transparent;
+        cursor: pointer;
+        outline: none;
+        display:inline-block;
+        clear: both;
+        transition: all 0.5s;
+    }
+    button:hover {
+      background: lightsalmon;
+    }
+
+
+button:active{
+  background: red;
+  border-color: grey;
+}
+
+
+input{
+    margin-right: 10px;
+    margin-left: 20px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: inline;
+    clear: both;
+    transition: all 0.5s;
+}

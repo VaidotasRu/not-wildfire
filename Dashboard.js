@@ -8,7 +8,6 @@ function workflow(){
 function simulationLog(){
 
   $('.dropdown').hide();
-  $('.SL_buttons').show('show');
 
   var namesOfSimulations = JSON.parse(localStorage.getItem('namesOfSim'));
   /*for(var i = 0; i < namesOfSimulations.length; i++){
@@ -26,7 +25,7 @@ function simulationLog(){
   {
     addBtn(namesOfSimulations[i]);
   }
-
+  $('.SL_buttons').show('show');
 }
 
 function addBtn(type){
@@ -41,7 +40,7 @@ function addBtn(type){
       alert("blabla");
     };*/
   
-    var foo = document.getElementsByClassName("SL_buttons");
+    var foo = document.getElementById("SL_buttons-id");
     //Append the element in page (in span).  
     foo.appendChild(element);
   

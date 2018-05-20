@@ -17,6 +17,7 @@ var valueArray = []; //
 var simNames = []; // Names of all simulations which are saved in local storage
 var currentURL = "";
 var skipActionRecord = false; // Allows to separate url change record from page reload
+
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
@@ -92,6 +93,20 @@ if(!isRec && response.type == "canceled" && eventArray.length != 0){
 
 });
 
+//ALARMS
+chrome.alarms.onAlarm.addListener(function( alarm ) {
+  StartReplay();
+});
+
+function createAlarm(name, delay, period){
+	chrome.alarms.create(name, {delayInMinutes: delay, periodInMinutes: period});
+}
+
+function clearAlarm(name){
+	chrome.alarms.clear(name);
+}
+
+//END OF ALARMS
 
 // RECORDING
 //---------------------------------------------------------------------------------------------

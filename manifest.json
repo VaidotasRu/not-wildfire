@@ -29,6 +29,7 @@
 				"http://*/*", 
 				"https://*/*",
         "activeTab",
-        "storage"
+        "storage",
+		"alarms"
       ]
     }

@@ -8,6 +8,7 @@ function workflow(){
 function simulationLog(){
 
   $('.dropdown').hide();
+  $('.SL_buttons').show('show');
 
   var namesOfSimulations = JSON.parse(localStorage.getItem('namesOfSim'));
   /*for(var i = 0; i < namesOfSimulations.length; i++){
@@ -20,12 +21,12 @@ function simulationLog(){
     btn[i].value = namesOfSimulations[i];
 
   }*/
-
+  alert(namesOfSimulations.length);
   for(var i = 0; i < namesOfSimulations.length; i++)
   {
     addBtn(namesOfSimulations[i]);
   }
-  $('.SL_buttons').show('show');
+
 }
 
 function addBtn(type){
@@ -35,14 +36,16 @@ function addBtn(type){
     //Assign different attributes to the element. 
     element.id = type;
     element.value = type; // Really? You want the default value to be the type string?
+    element.class = "SL_buttons";
     element.name = type; // And the name too?
    /* element.onclick = function() { // Note this is a function
       alert("blabla");
     };*/
-  
-    var foo = document.getElementById("SL_buttons-id");
+
+    $("#simLog").append(element);
+//    var foo = document.getElementsByClassName("SL_buttons");
     //Append the element in page (in span).  
-    foo.appendChild(element);
+  //  document.appendChild(element);
   
 }
 

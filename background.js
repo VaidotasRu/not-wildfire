@@ -20,9 +20,9 @@ var skipActionRecord = false; // Allows to separate url change record from page 
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
-    if (response.type == "loaded") { // Indicates that page is loaded. Used during replaying
-        waitForPageLoad = false;
-    }
+    //if (response.type == "loaded") { // Indicates that page is loaded. Used during replaying
+  //      waitForPageLoad = false;
+  //  }
 
     if (response.type == "Play") { // Replaying
         replayTabs = [];
@@ -180,11 +180,15 @@ function defaultNumber() {
 
 // Detects url changes
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
+
+    if (info.status == 'complete') { 
+        waitForPageLoad = false;
+    }
+
     if (isRec) {
 
         if (info.status == 'complete') { //status == complete means that page finished loading
-
-                    if (skipActionRecord) {
+       if (skipActionRecord) {
                         skipActionRecord = false;
                     }
                     else {
@@ -298,26 +302,34 @@ callInjection(0); //Starting simulation
 }
 
  //Injecting script which will trigger part of the events during simulation replay
-function injectReplay(){		   
-		   chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-    chrome.tabs.executeScript(tabs[0].id, { file: "Replay.js" }, function () {
-        callInjection(index); // After script was injected, replay will continue
-    });
+function injectReplay() {
+    if (!waitForPageLoad) {
+        chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+            chrome.tabs.executeScript(tabs[0].id, { file: "jquery-3.3.1.js" });
+            chrome.tabs.executeScript(tabs[0].id, { file: "Replay.js" }, function () {
+                callInjection(index); // After script was injected, replay will continue
+            });
 
-  });
-
+        });
+    } else // If page is not loaded yet, function tries to call itself each 0.5sec
+    {
+        setTimeout(function () {
+            injectReplay();
+        }, 500);
+    }
 }
 
 // Function is recursively called with one second gaps until it iterates through all commands
-function callInjection(param_index){
-
+function callInjection(param_index) {
     index = param_index;
 
     if (!scriptInjected) { // Cheking if re-injection of Replay.js is required
-        injectReplay();
+       // waitForPageLoad = true;
         scriptInjected = true;
-    } else {
-        if (!waitForPageLoad) {
+        injectReplay();
+    }
+ else if (!waitForPageLoad) {
+
             sendMessage(Commands[index], PositionX[index], PositionY[index], Values[index]);
 
             setTimeout(function () {
@@ -332,13 +344,14 @@ function callInjection(param_index){
             }, 500);
         }
     }
-}
+//}
 
 // Sends message with command positions and value to injected script
 function sendMessage(command, posX, posY, value) {
     if (command == "URLchange" || command == "newTab") {
         scriptInjected = false;
         waitForPageLoad = true;
+
     }
     if (command == "tabSwitch") { // TAb switches and openings are done from extension and don't require message sending to injected script
         switchTab(value);

@@ -2,7 +2,7 @@
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	if(message.type == "URLchange"){
 window.location = message.value;
-	}
+    }
 		 		if(message.type == "input"){
 		var elem = document.elementFromPoint(message.posX, message.posY); 
 elem.value = message.value;  
@@ -19,7 +19,10 @@ elem.click();
                     window.scrollTo(message.posX, message.posY);
                 }
                 if (message.type == "submit") {
+                    alert('ss');
 		var elem = document.elementFromPoint(message.posX, message.posY); 
-elem.submit();                  }
+        
+            $(elem).submit();
+                }
 });
 

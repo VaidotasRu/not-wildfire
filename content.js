@@ -1,14 +1,19 @@
 var body = document.querySelector('body');
               body.addEventListener('click', findContent);
               body.addEventListener('input', findContent);
-			                body.addEventListener('submit', findContent);
+
+              body.addEventListener('submit', findContent);
 
               chrome.runtime.sendMessage({ content: "scroll", xPos: body.scrollLeft, yPos: body.scrollTop, value: null, type: "save" });	
 
 function findContent(e){
-
+    if (e.type == "submit") {
+        alert('submit');
+    }
     if (e.type == "click") {
-        chrome.runtime.sendMessage({ content: e.type, xPos: e.pageX, yPos: e.pageY, value: null, type: "save" });
+        if (xPos != 0 || yPos != 0) {
+            chrome.runtime.sendMessage({ content: e.type, xPos: e.pageX, yPos: e.pageY, value: null, type: "save" });
+        }
     }
     else {
 		    var rect = document.activeElement.getBoundingClientRect();

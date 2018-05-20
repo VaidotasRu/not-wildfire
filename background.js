@@ -347,6 +347,10 @@ function callInjection(param_index) {
 
             sendMessage(Commands[index], PositionX[index], PositionY[index], Values[index]);
 
+            if (Commands[index] == "submit") {
+                index += 2; // URL change after submit and scroll position are recorded, but hey should not be replayed
+            }
+
             setTimeout(function () {
                 if (index < Commands.length) {
                     callInjection(index + 1);

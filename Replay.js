@@ -12,17 +12,17 @@ elem.value = message.value;
 		
 		var result = elem.hasAttribute('href'); // If element has href attribute, he won't be clicked, because url change (triggered by click) is recorded separately. 		
         if (!result) {                            //  In other case, there would be click, which would change url and after page load, he would reload again
-elem.click(); 
+
+            elem.click(); 
         }
                 }
                 if (message.type == "scroll") {
                     window.scrollTo(message.posX, message.posY);
                 }
                 if (message.type == "submit") {
-                    alert('ss');
-		var elem = document.elementFromPoint(message.posX, message.posY); 
-        
-            $(elem).submit();
+
+                          var elem = document.elementFromPoint(message.posX, message.posY);
+                          elem.click();
                 }
 });
 

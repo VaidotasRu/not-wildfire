@@ -37,8 +37,14 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         });
 		
 		promptAlarm();
-		
-        StartReplay();
+        
+        if ( response.record ) {
+          StartReplay(response.record);
+        }
+        else {
+          StartReplay("Default");
+        }
+       
     }
 
     if (response.type == "start") { // Start recording
@@ -336,8 +342,9 @@ function checkInput(posX, posY, value) {
 //---------------------------------------------------------------------------------------------
 
 // Reads and parses data from local storage before replaying
-function DataParsing(){
-	var temp_records = (localStorage.getItem("Default")).split(";");
+function DataParsing(record){
+    alert(record);
+	var temp_records = (localStorage.getItem(record)).split(";");
 
 for(var i = 0; i < temp_records.length-1; i++)
 {
@@ -351,9 +358,9 @@ Values[i] = object.Value;
 }
 
 // Reads data from chrome.storage and selects commands, positions and values 
-function StartReplay(){
+function StartReplay(record){
 
-DataParsing(); 
+DataParsing(record); 
 
 callInjection(0); //Starting simulation
 	

@@ -7,19 +7,20 @@ var body = document.querySelector('body');
               chrome.runtime.sendMessage({ content: "scroll", xPos: body.scrollLeft, yPos: body.scrollTop, value: null, type: "save" });	
 
 function findContent(e){
-    if (e.type == "submit") {
-        alert('submit');
-    }
+
     if (e.type == "click") {
-        if (xPos != 0 || yPos != 0) {
+        if (e.pageX != 0 || e.pageY != 0) {
             chrome.runtime.sendMessage({ content: e.type, xPos: e.pageX, yPos: e.pageY, value: null, type: "save" });
         }
     }
     else {
 		    var rect = document.activeElement.getBoundingClientRect();
-	 
-	chrome.runtime.sendMessage({ content: e.type, xPos: rect.left, yPos: rect.top, value: e.target.value, type: "save" });
-    	
+            if (e.type == "submit") {
+                chrome.runtime.sendMessage({ content: e.type, xPos: rect.left, yPos: rect.top, value: null, type: "save" });
+            }
+            else {
+                chrome.runtime.sendMessage({ content: e.type, xPos: rect.left, yPos: rect.top, value: e.target.value, type: "save" });     
+}
 	}
   
 }

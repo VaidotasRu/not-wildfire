@@ -37,8 +37,8 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         });
 
 
-        promptAlarm();
-        if (alarmDelay == 0 || alarmPeriod == 0) {
+  //      promptAlarm();
+    //    if (alarmDelay == 0 || alarmPeriod == 0) {
 
             if (response.record) {
                 StartReplay(response.record);
@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
                 StartReplay("Default");
             }
         }
-    }
+    //}
 
     if (response.type == "start") { // Start recording
 
@@ -104,7 +104,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
 
 });
-
+/*
 //ALARMS
 chrome.alarms.onAlarm.addListener(function (alarm) {
     if (currentNumber < alarmNumber) {
@@ -156,7 +156,7 @@ function promptAlarm() {
     currentNumber = 0;
 }
 //END OF ALARMS
-
+*/
 // RECORDING
 //---------------------------------------------------------------------------------------------
 
@@ -341,8 +341,8 @@ function checkInput(posX, posY, value) {
 //---------------------------------------------------------------------------------------------
 
 // Reads and parses data from local storage before replaying
+
 function DataParsing(record) {
-    alert(record);
     var temp_records = (localStorage.getItem(record)).split(";");
 
     for (var i = 0; i < temp_records.length - 1; i++) {
@@ -368,8 +368,8 @@ function StartReplay(record) {
 function injectReplay() {
     if (!waitForPageLoad) {
         chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-            chrome.tabs.executeScript(tabs[0].id, { file: "jquery-3.3.1.js" });
             chrome.tabs.executeScript(tabs[0].id, { file: "Replay.js" }, function () {
+                scriptInjected = true;
                 callInjection(index); // After script was injected, replay will continue
             });
 
@@ -387,26 +387,29 @@ function callInjection(param_index) {
     index = param_index;
 
     if (!scriptInjected) { // Cheking if re-injection of Replay.js is required
-        // waitForPageLoad = true;
-        scriptInjected = true;
         injectReplay();
     }
-    else if (!waitForPageLoad) {
+ else if (!waitForPageLoad) {
+        alert(index);
+            sendMessage(Commands[index], PositionX[index], PositionY[index], Values[index]);
 
-        sendMessage(Commands[index], PositionX[index], PositionY[index], Values[index]);
-
-        setTimeout(function () {
-            if (index < Commands.length) {
-                callInjection(index + 1);
+            if (Commands[index] == "submit") {
+                index += 2; // URL change after submit and scroll position are recorded, but hey should not be replayed
             }
-        }, 1000);
-    } else // If page is not loaded yet, function tries to call itself each 0.5sec
-    {
-        setTimeout(function () {
-            callInjection(index);
-        }, 500);
+
+            setTimeout(function () {
+                if (index < Commands.length) {
+                    callInjection(index + 1);
+                }
+            }, 1000);
+        } else // If page is not loaded yet, function tries to call itself each 0.5sec
+        {
+            setTimeout(function () {
+                callInjection(index);
+            }, 500);
+        }
     }
-}
+
 //}
 
 // Sends message with command positions and value to injected script

@@ -1,27 +1,48 @@
+<!doctype html>
 <html>
+
 <head>
 	<title>Getting Started Extension's Management</title>
+	<link rel="stylesheet" type="text/css" href="Dashboard.css"></link>
+</head>
+
+<script src="Dashboard.js"></script>
+<script src="jquery-3.3.1.js"></script>
+<script src="html2canvas.js"></script>
+
+<body>
 	<style>
-	button {
-		  margin-top: 10px;
-		  margin-right: 10px;
-		  margin-left: 10px;
-		  line-height: 25px;
-		  font-size: 11px;
-		  font-weight: bold;
-		  padding: 0 20px;
-		  background: salmon;
-		  border: none;
-		}
-		button:hover {
-		  background: lightsalmon;
+		#simLog {
+			max-width: 100%;
+			height: 100%;
 		}
 	</style>
-</head>
-<body>
-	<button id="Dashboard">SIMULATION LOG</button>
-	<button id="Dashboard">EVENT LOG</button>
-	<button id="Dashboard">WORKFLOW EDITOR</button>
-	<button id="Dashboard">SETTINGS</button>
+	<div class="toolbar">
+		<button id="SL" class="primary">SIMULATION LOG</button>
+		<button id="EL" class="primary">EVENT LOG</button>
+		<button id="WE" class="primary">WORKFLOW EDITOR</button>
+		<button id="settings" class="primary">SETTINGS</button>
+	</div>
+
+	<div id="container"> 
+
+	</div>
+
+	<div id="simLog" class="SL_buttons">
+		<button id="play" class="SL_buttons">Play</button>
+	</div>
+	<div class="dropdown">
+		<button id="dropdownbtn" class="dropbtn">Week day</button>
+		<div id="myDropdown" class="dropdown-content">
+			<a href="#Monday">Monday</a>
+			<a href="#Tuesday">Tuesday</a>
+			<a href="#Wednesday">Wednesday</a>
+			<a href="#Thursday">Thursday</a>
+			<a href="#Friday">Friday</a>
+			<a href="#Saturday">Saturday</a>
+			<a href="#Sunday">Sunday</a>
+		</div>
+	</div>
 </body>
+
 </html>

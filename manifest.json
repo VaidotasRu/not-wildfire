@@ -16,19 +16,20 @@
     "persistent": false
   },
 
-  "content_scripts": [
-    {
-	      "matches": ["http://*/*", "https://*/*"],
-	"js": [ "content.js" ]
+ // "content_scripts": [
+  //  {
+//	      "matches": ["http://*/*", "https://*/*"],
+	//"js": [ "content.js" ]
 
-    }
-    ],
+ //   }
+   // ],
 
       "permissions": [
 	            "tabs",
 				"http://*/*", 
 				"https://*/*",
         "activeTab",
-        "storage"
+        "storage",
+		"alarms"
       ]
     }

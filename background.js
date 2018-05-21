@@ -7,7 +7,7 @@ var PositionY = [];//...
 var Values = [];   //...
 var recordTabs = [];  // ID of each created tab is saved in recordTabs, but only their index in the array are saved in local storage, because during replaying each...
 var replayTabs = [];  // ...  tab will have different ID, but their IDs will be saved in replayTabs in the same order as during recording. AS a result, index of 1 ...
-                      // ... reffers to tab from where recording has started, 2 - second opened tab, 3 - third oepened tab.
+// ... reffers to tab from where recording has started, 2 - second opened tab, 3 - third oepened tab.
 
 let isRec = false; // Indicates that extension records user's actions
 var recordX = [];    //
@@ -18,12 +18,13 @@ var simNames = []; // Names of all simulations which are saved in local storage
 var currentURL = "";
 var skipActionRecord = false; // Allows to separate url change record from page reload
 
+var alarmDelay, alarmPeriod, alarmName, alarmNumber, currentNumber;
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
     //if (response.type == "loaded") { // Indicates that page is loaded. Used during replaying
-  //      waitForPageLoad = false;
-  //  }
+    //      waitForPageLoad = false;
+    //  }
 
     if (response.type == "Play") { // Replaying
         replayTabs = [];
@@ -35,8 +36,18 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
             replayTabs.push(activeTab.id);
         });
 
-        StartReplay();
-    }
+
+  //      promptAlarm();
+    //    if (alarmDelay == 0 || alarmPeriod == 0) {
+
+            if (response.record) {
+                StartReplay(response.record);
+            }
+            else {
+                StartReplay("Default");
+            }
+        }
+    //}
 
     if (response.type == "start") { // Start recording
 
@@ -61,10 +72,10 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         if (response.type == "save") {  // Saving data
 
             if (response.content == "scroll") { // Prevention of unnecessary scroll input and resize events saving
-                checkScroll(response.xPos, response.yPos) 
+                checkScroll(response.xPos, response.yPos)
             }
             else if (response.content == "input") {
-                checkInput(response.xPos, response.yPos, response.value); 
+                checkInput(response.xPos, response.yPos, response.value);
             }
             else {
                 eventArray.push(response.content); // Standart event saving
@@ -80,72 +91,110 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
     }
 
 
-if(!isRec && response.type == "canceled" && eventArray.length != 0){
-	alert("Simulation has not been saved");
-	EmptyArrays();
-}
+    if (!isRec && response.type == "canceled" && eventArray.length != 0) {
+        alert("Simulation has not been saved");
+        EmptyArrays();
+    }
 
     if (!isRec && response.type == "simName") {
-		SaveSimulationRecord(response.simName);
-		EmptyArrays();
-	}
+        alarmName = response.simName;
+        SaveSimulationRecord(response.simName);
+        EmptyArrays();
+    }
 
 
 });
-
+/*
 //ALARMS
-chrome.alarms.onAlarm.addListener(function( alarm ) {
-  StartReplay();
+chrome.alarms.onAlarm.addListener(function (alarm) {
+    if (currentNumber < alarmNumber) {
+        StartReplay();
+        currentNumber++;
+    }
+    else {
+        clearAlarm(alarmName);
+    }
 });
 
-function createAlarm(name, delay, period){
-	chrome.alarms.create(name, {delayInMinutes: delay, periodInMinutes: period});
+function createAlarm(name, delay, period, number) {
+    if (delay != 0 && period != 0) {
+        chrome.alarms.create(name, { delayInMinutes: delay, periodInMinutes: period });
+    }
 }
 
-function clearAlarm(name){
-	chrome.alarms.clear(name);
+function clearAlarm(name) {
+    chrome.alarms.clear(name);
 }
 
+function promptAlarm() {
+    alarmDelay = prompt("Enter alarm delay (in minutes) or leave '0' if you don't want to create it", 0);
+
+    while (isNaN(alarmDelay)) {
+        alarmDelay = prompt("A number is required", 0);
+    }
+
+    alarmDelay = parseFloat(alarmDelay);
+
+    if (alarmDelay != 0) {
+        alarmPeriod = prompt("Enter alarm period (in minutes)");
+
+        while (isNaN(alarmPeriod)) {
+            alarmPeriod = prompt("A number is required");
+        }
+
+        alarmPeriod = parseFloat(alarmPeriod);
+
+        alarmNumber = prompt("How many times should alarm execute?", 1);
+
+        while (isNaN(alarmNumber)) {
+            alarmNumber = prompt("A number is required");
+        }
+
+        alarmNumber = parseInt(alarmNumber);
+    }
+    createAlarm(alarmName, alarmDelay, alarmPeriod);
+    currentNumber = 0;
+}
 //END OF ALARMS
-
+*/
 // RECORDING
 //---------------------------------------------------------------------------------------------
 
 //  NAMING AND SAVING SIMULATION'S RECORDED EVENTS POSITIONS AND VALUES 
 function SaveSimulationRecord(name) {
     if (eventArray.length == 0)
-		alert("There's nothing to save");
-	else{
-    var simulation;
-    var jsonNames;
-	if (localStorage.getItem(name) === null) { //checking if the name does not exist
-        simulation = name;
+        alert("There's nothing to save");
+    else {
+        var simulation;
+        var jsonNames;
+        if (localStorage.getItem(name) === null) { //checking if the name does not exist
+            simulation = name;
 
-        jsonNames = JSON.parse(localStorage.getItem('namesOfSim'));
-        if (jsonNames == null) {
-            jsonNames = [];
+            jsonNames = JSON.parse(localStorage.getItem('namesOfSim'));
+            if (jsonNames == null) {
+                jsonNames = [];
+            }
+            jsonNames.push(simulation);
+
+            localStorage.setItem('namesOfSim', JSON.stringify(jsonNames));
         }
-        jsonNames.push(simulation);
+        else {
+            var number = defaultNumber();
+            simulation = "DefaultName" + number;
+            jsonNames = JSON.parse(localStorage.getItem('namesOfSim'));
+            if (jsonNames == null) {
+                jsonNames = [];
+            }
+            jsonNames.push(simulation);
 
-        localStorage.setItem('namesOfSim', JSON.stringify(jsonNames));
-	}
-	else {
-		var number = defaultNumber();
-        simulation = "DefaultName" + number;
-        jsonNames = JSON.parse(localStorage.getItem('namesOfSim'));
-        if (jsonNames == null) {
-            jsonNames = [];
+            localStorage.setItem('namesOfSim', JSON.stringify(jsonNames));
+
+            alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
         }
-        jsonNames.push(simulation);
-
-        localStorage.setItem('namesOfSim', JSON.stringify(jsonNames));
-
-		alert("A simulation log with this name already exists. Simulation is saved by name \"" + simulation + "\"");
+        for (var i = 0; i < eventArray.length; i++) { // Eah action will be appended to local storage item separately
+            appendtoLocalStorageItem(eventArray[i], recordX[i], recordY[i], valueArray[i], simulation);
+        }
     }
-    for (var i = 0; i < eventArray.length; i++) { // Eah action will be appended to local storage item separately
-		appendtoLocalStorageItem(eventArray[i], recordX[i], recordY[i], valueArray[i], simulation); 
-		}
-	}
 }
 
 // Appends data to local storage item. If item doesn't exist, it is created.
@@ -162,7 +211,7 @@ function appendtoLocalStorageItem(command, x, y, value, itemName) {
 
     var data = JSON.stringify(json);
 
-    var oldItem = localStorage.getItem(itemName); 
+    var oldItem = localStorage.getItem(itemName);
     if (oldItem === null) {
         oldItem = "";
     }
@@ -171,24 +220,23 @@ function appendtoLocalStorageItem(command, x, y, value, itemName) {
 
 }
 
-function EmptyArrays()
-{
+function EmptyArrays() {
     eventArray = [];
     recordX = [];
     recordY = [];
     valueArray = [];
-recordTabs = [];
+    recordTabs = [];
 }
 
 // Creates number for default name of simulation
 function defaultNumber() {
-	var lastNumber = localStorage.getItem("alldefaultnumbers");
-    if(lastNumber === null){
-		lastNumber = 1;
-	}
+    var lastNumber = localStorage.getItem("alldefaultnumbers");
+    if (lastNumber === null) {
+        lastNumber = 1;
+    }
     //checking if simulation with this name exists
-	while (localStorage.getItem("DefaultName" + lastNumber) !== null)
-		lastNumber++;
+    while (localStorage.getItem("DefaultName" + lastNumber) !== null)
+        lastNumber++;
     localStorage.setItem("alldefaultnumbers", lastNumber);
     return lastNumber;
 }
@@ -196,42 +244,42 @@ function defaultNumber() {
 // Detects url changes
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
-    if (info.status == 'complete') { 
+    if (info.status == 'complete') {
         waitForPageLoad = false;
     }
 
     if (isRec) {
 
         if (info.status == 'complete') { //status == complete means that page finished loading
-       if (skipActionRecord) {
-                        skipActionRecord = false;
-                    }
-                    else {
-                        recorddURLChange(currentURL);
-                        injectContent();
+            if (skipActionRecord) {
+                skipActionRecord = false;
             }
-        }
-                if (info.url != undefined && info.url != "chrome://newtab/") { // Event is fired for each iFrame
-                skipActionRecord = true;
-                currentURL = info.url;
-                recorddURLChange(info.url);
+            else {
+                recorddURLChange(currentURL);
                 injectContent();
             }
         }
-    
-}); 
+        if (info.url != undefined && info.url != "chrome://newtab/") { // Event is fired for each iFrame
+            skipActionRecord = true;
+            currentURL = info.url;
+            recorddURLChange(info.url);
+            injectContent();
+        }
+    }
+
+});
 
 function recorddURLChange(url) {
 
     eventArray.push("URLchange");
     recordX.push(0);
     recordY.push(0);
-    valueArray.push(url); 
+    valueArray.push(url);
 
 }
 
 // Records creation of new tab
-chrome.tabs.onCreated.addListener(function (tab) {  
+chrome.tabs.onCreated.addListener(function (tab) {
 
     if (isRec) {
         eventArray.push("newTab");
@@ -254,7 +302,7 @@ chrome.tabs.onHighlighted.addListener(function (tabs) { // Records tab switch
         eventArray.push("tabSwitch");
         recordX.push(0);
         recordY.push(0);
-        valueArray.push(tabIndex); 
+        valueArray.push(tabIndex);
     }
 });
 
@@ -293,30 +341,30 @@ function checkInput(posX, posY, value) {
 //---------------------------------------------------------------------------------------------
 
 // Reads and parses data from local storage before replaying
-function DataParsing(){
-    var temp_records = (localStorage.getItem("Default")).split(";");
 
-for(var i = 0; i < temp_records.length-1; i++)
-{
+function DataParsing(record) {
+    var temp_records = (localStorage.getItem(record)).split(";");
 
-var object = JSON.parse(temp_records[i]);
-Commands[i] = object.Command;
-PositionX[i] = object.X;
-PositionY[i] = object.Y;
-Values[i] = object.Value;
-}
+    for (var i = 0; i < temp_records.length - 1; i++) {
+
+        var object = JSON.parse(temp_records[i]);
+        Commands[i] = object.Command;
+        PositionX[i] = object.X;
+        PositionY[i] = object.Y;
+        Values[i] = object.Value;
+    }
 }
 
 // Reads data from chrome.storage and selects commands, positions and values 
-function StartReplay(){
+function StartReplay(record) {
 
-DataParsing(); 
+    DataParsing(record);
 
-callInjection(0); //Starting simulation
-	
+    callInjection(0); //Starting simulation
+
 }
 
- //Injecting script which will trigger part of the events during simulation replay
+//Injecting script which will trigger part of the events during simulation replay
 function injectReplay() {
     if (!waitForPageLoad) {
         chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -339,11 +387,10 @@ function callInjection(param_index) {
     index = param_index;
 
     if (!scriptInjected) { // Cheking if re-injection of Replay.js is required
-
         injectReplay();
     }
  else if (!waitForPageLoad) {
-
+        alert(index);
             sendMessage(Commands[index], PositionX[index], PositionY[index], Values[index]);
 
             if (Commands[index] == "submit") {
@@ -362,6 +409,7 @@ function callInjection(param_index) {
             }, 500);
         }
     }
+
 //}
 
 // Sends message with command positions and value to injected script
@@ -384,10 +432,10 @@ function sendMessage(command, posX, posY, value) {
 }
 
 // During replaying new tabs are created from extension
-function createNewTab(){
+function createNewTab() {
 
-    chrome.tabs.create({ 'url': "https://www.google.lt/"}, function(tab){  // Any website must be opened when creating new tab, because it is imposible to inject script into blank tab 
-                                                                           // and it might stop simulation replaying. Google is choosen as default website.
+    chrome.tabs.create({ 'url': "https://www.google.lt/" }, function (tab) {  // Any website must be opened when creating new tab, because it is imposible to inject script into blank tab 
+        // and it might stop simulation replaying. Google is choosen as default website.
         replayTabs.push(tab.id); // ID of newly created tab is saved
     });
 
@@ -399,8 +447,8 @@ function switchTab(tabIndex) {
     tabId = replayTabs[index];
     chrome.tabs.get(tabId, function (tab) {
         chrome.tabs.highlight({ 'tabs': tab.index }, function () { });
-    });   
-	}
+    });
+}
 
 function injectContent() {
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -409,6 +457,5 @@ function injectContent() {
 
     });
 }
-
 
 

@@ -1,12 +1,13 @@
 function workflow(){
 
     $('.dropdown').show('show');
-    $('.SL_buttons').hide();
+    $('#container').hide('show');
 
 }
 
 function simulationLog(){
 
+  $('.dropdown').hide('show');
   var simulationList = JSON.parse(localStorage.getItem("namesOfSim"));
   var jsonSimulations = [];
   $('#container').empty();
@@ -17,6 +18,7 @@ function simulationLog(){
       executeRecord(e.target.id);
       });
   }
+  $('#container').show('show');
 }
 
 function addBtn(type){
@@ -40,11 +42,11 @@ function addBtn(type){
 }
 
 function settings() {
-
+  $('#container').hide('show');
 }
 
 function eventLog() {
-
+  $('#container').hide('show');
 }
 
 function action(){

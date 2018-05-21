@@ -36,7 +36,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
             replayTabs.push(activeTab.id);
         });
 		
-		promptAlarm();
+        promptAlarm();
         
         if ( response.record ) {
           StartReplay(response.record);
@@ -456,6 +456,5 @@ function injectContent() {
 
     });
 }
-
 
 

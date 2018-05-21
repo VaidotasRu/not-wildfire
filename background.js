@@ -18,6 +18,7 @@ var simNames = []; // Names of all simulations which are saved in local storage
 var currentURL = "";
 var skipActionRecord = false; // Allows to separate url change record from page reload
 
+var alarmDelay, alarmPeriod, alarmName, alarmNumber, currentNumber;
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
@@ -34,7 +35,9 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
             var activeTab = tabs[0];
             replayTabs.push(activeTab.id);
         });
-
+		
+		promptAlarm();
+		
         StartReplay();
     }
 
@@ -86,6 +89,7 @@ if(!isRec && response.type == "canceled" && eventArray.length != 0){
 }
 
     if (!isRec && response.type == "simName") {
+		alarmName = response.simName;
 		SaveSimulationRecord(response.simName);
 		EmptyArrays();
 	}
@@ -95,17 +99,56 @@ if(!isRec && response.type == "canceled" && eventArray.length != 0){
 
 //ALARMS
 chrome.alarms.onAlarm.addListener(function( alarm ) {
-  StartReplay();
+	if(currentNumber < alarmNumber){
+		StartReplay();
+		currentNumber++;
+	}
+	else
+	{
+		clearAlarm(alarmName);
+	}
 });
 
-function createAlarm(name, delay, period){
+function createAlarm(name, delay, period, number){
+	if(delay != 0 && period != 0){
 	chrome.alarms.create(name, {delayInMinutes: delay, periodInMinutes: period});
+	}
 }
 
 function clearAlarm(name){
 	chrome.alarms.clear(name);
 }
 
+function promptAlarm(){
+	alarmDelay = prompt("Enter alarm delay (in minutes) or leave '0' if you don't want to create it", 0);
+	
+	while(isNaN(alarmDelay)) {
+		alarmDelay = prompt("A number is required", 0);
+	}
+	
+	alarmDelay = parseFloat(alarmDelay);
+
+		if(alarmDelay != 0){
+			alarmPeriod = prompt("Enter alarm period (in minutes)");
+			
+			while(isNaN(alarmPeriod)) {
+				alarmPeriod = prompt("A number is required");
+			}
+			
+			alarmPeriod = parseFloat(alarmPeriod);
+			
+			alarmNumber = prompt("How many times should alarm execute?", 1);
+			
+			while(isNaN(alarmNumber)) {
+				alarmNumber = prompt("A number is required");
+			}
+			
+			alarmNumber = parseInt(alarmNumber);
+		}
+		createAlarm(alarmName, alarmDelay, alarmPeriod);
+		currentNumber = 0;
+		alarmNumber--;
+}
 //END OF ALARMS
 
 // RECORDING

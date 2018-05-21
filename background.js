@@ -36,15 +36,17 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
             replayTabs.push(activeTab.id);
         });
 		
+      
         promptAlarm();
-        
-        if ( response.record ) {
-          StartReplay(response.record);
+		    if(alarmDelay == 0 || alarmPeriod == 0) {
+         
+          if ( response.record ) {
+            StartReplay(response.record);
+          }
+          else {
+            StartReplay("Default");
+          }
         }
-        else {
-          StartReplay("Default");
-        }
-       
     }
 
     if (response.type == "start") { // Start recording
@@ -153,7 +155,6 @@ function promptAlarm(){
 		}
 		createAlarm(alarmName, alarmDelay, alarmPeriod);
 		currentNumber = 0;
-		alarmNumber--;
 }
 //END OF ALARMS
 

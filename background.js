@@ -294,7 +294,7 @@ function checkInput(posX, posY, value) {
 
 // Reads and parses data from local storage before replaying
 function DataParsing(){
-	var temp_records = (localStorage.getItem("Default")).split(";");
+    var temp_records = (localStorage.getItem("Default")).split(";");
 
 for(var i = 0; i < temp_records.length-1; i++)
 {
@@ -320,8 +320,8 @@ callInjection(0); //Starting simulation
 function injectReplay() {
     if (!waitForPageLoad) {
         chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-            chrome.tabs.executeScript(tabs[0].id, { file: "jquery-3.3.1.js" });
             chrome.tabs.executeScript(tabs[0].id, { file: "Replay.js" }, function () {
+                scriptInjected = true;
                 callInjection(index); // After script was injected, replay will continue
             });
 
@@ -339,8 +339,7 @@ function callInjection(param_index) {
     index = param_index;
 
     if (!scriptInjected) { // Cheking if re-injection of Replay.js is required
-       // waitForPageLoad = true;
-        scriptInjected = true;
+
         injectReplay();
     }
  else if (!waitForPageLoad) {
@@ -390,7 +389,7 @@ function createNewTab(){
     chrome.tabs.create({ 'url': "https://www.google.lt/"}, function(tab){  // Any website must be opened when creating new tab, because it is imposible to inject script into blank tab 
                                                                            // and it might stop simulation replaying. Google is choosen as default website.
         replayTabs.push(tab.id); // ID of newly created tab is saved
-  });
+    });
 
 }
 

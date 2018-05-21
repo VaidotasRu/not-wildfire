@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         });
 		
 		promptAlarm();
-		
+		if(alarmDelay == 0 || alarmPeriod == 0)
         StartReplay();
     }
 
@@ -147,7 +147,6 @@ function promptAlarm(){
 		}
 		createAlarm(alarmName, alarmDelay, alarmPeriod);
 		currentNumber = 0;
-		alarmNumber--;
 }
 //END OF ALARMS
 

@@ -7,26 +7,16 @@ function workflow(){
 
 function simulationLog(){
 
-  $('.dropdown').hide();
-  $('.SL_buttons').show('show');
+  var simulationList = JSON.parse(localStorage.getItem("namesOfSim"));
+  var jsonSimulations = [];
+  $('#container').empty();
 
-  var namesOfSimulations = JSON.parse(localStorage.getItem('namesOfSim'));
-  /*for(var i = 0; i < namesOfSimulations.length; i++){
-
-    btn[i] = document.createElement('BUTTON');
-    $(btn[i]).attr('class', 'SL_buttons');
-    $(btn[i]).attr('id', namesOfSimulations[i]);
-    $(btn[i]).attr('name', namesOfSimulations[i]);
-    $(btn[i]).attr('value', namesOfSimulations[i]);
-    btn[i].value = namesOfSimulations[i];
-
-  }*/
-  alert(namesOfSimulations.length);
-  for(var i = 0; i < namesOfSimulations.length; i++)
-  {
-    addBtn(namesOfSimulations[i]);
+  for (i = 0; i < simulationList.length; i++) { 
+    $('<div class=simulationItem> <h2> '+ simulationList[i] +'</h2> <button id='+simulationList[i]+'> Play </button> <button> Edit </button> </div>').appendTo('#container');
+    $('#'+simulationList[i]).click(function (e){
+      executeRecord(e.target.id);
+      });
   }
-
 }
 
 function addBtn(type){
@@ -77,8 +67,11 @@ window.onclick = function(event) { //retracts dropdown button if pressed out sid
   }
 }
 
-function play(){
-  chrome.runtime.sendMessage({type: "Play"}); //Starts replaying in a current tab
+function executeRecord(recordName) {
+  chrome.runtime.sendMessage({
+    type: "Play",
+    record: recordName,
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () =>{

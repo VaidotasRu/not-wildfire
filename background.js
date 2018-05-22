@@ -18,6 +18,8 @@ var simNames = []; // Names of all simulations which are saved in local storage
 var currentURL = "";
 var skipActionRecord = false; // Allows to separate url change record from page reload
 
+var reloaded = false;
+
 var alarmDelay, alarmPeriod, alarmName, alarmNumber, currentNumber;
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
 
@@ -367,6 +369,10 @@ function StartReplay(record) {
 //Injecting script which will trigger part of the events during simulation replay
 function injectReplay() {
     if (!waitForPageLoad) {
+		if(reloaded == false){
+		 chrome.tabs.reload();
+		 reloaded = true;
+		}
         chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
             chrome.tabs.executeScript(tabs[0].id, { file: "Replay.js" }, function () {
                 scriptInjected = true;

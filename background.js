@@ -18,7 +18,7 @@ var simNames = []; // Names of all simulations which are saved in local storage
 var currentURL = "";
 var skipActionRecord = false; // Allows to separate url change record from page reload
 
-var reloaded = false;
+var reloaded;
 
 var alarmDelay, alarmPeriod, alarmName, alarmNumber, currentNumber;
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
@@ -29,6 +29,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
     //  }
 
     if (response.type == "Play") { // Replaying
+		reloaded = false;
         replayTabs = [];
         index = 0;
         scriptInjected = false;
@@ -49,6 +50,8 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
                 StartReplay("Default");
             }
         }
+		
+		reloaded = false;
     }
 
     if (response.type == "start") { // Start recording
@@ -386,6 +389,7 @@ function injectReplay() {
             injectReplay();
         }, 500);
     }
+	
 }
 
 // Function is recursively called with one second gaps until it iterates through all commands
@@ -413,6 +417,8 @@ function callInjection(param_index) {
                 callInjection(index);
             }, 500);
         }
+		
+		
     }
 
 //}

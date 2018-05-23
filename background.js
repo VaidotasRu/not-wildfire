@@ -389,14 +389,17 @@ function injectReplay() {
 			chrome.tabs.getAllInWindow(win.id, function(tabs)
 			{
 					chrome.windows.update(tabs[0].windowId, {state:"minimized", focused:false});
+					chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+					chrome.tabs.update(tabs[0].id, {active:true, selected:true, url: "http://www.google.lt"});
+					});
 					
 			});
 		});
-		setTimeout(function () {
+		
+		 setTimeout(function () {
 			chrome.tabs.reload();
             
         }, 2000);
-		 
 		 reloaded = true;
 		}
         chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -442,7 +445,7 @@ function callInjection(param_index) {
                 if (index < Commands.length) {
                     callInjection(index + 1);
                 }
-            }, 3000);
+            }, 1000);
         } else // If page is not loaded yet, function tries to call itself each 0.5sec
         {
             setTimeout(function () {

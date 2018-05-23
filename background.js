@@ -19,6 +19,8 @@ var currentURL = "";
 var skipActionRecord = false; // Allows to separate url change record from page reload
 
 var reloaded;
+var reloaded2 = false;
+var k = 0;
 
 var alarmDelay, alarmPeriod, alarmName, alarmNumber, currentNumber;
 // MESSAGE LISTENER. RECIEVES MESSAGES REQUIRED FOR RECORDING AND REPLAYING
@@ -369,11 +371,33 @@ function StartReplay(record) {
 
 }
 
+
+function callback(tab) {
+    if (chrome.runtime.lastError) {
+        console.log(chrome.runtime.lastError.message);
+    }
+}
+
+
 //Injecting script which will trigger part of the events during simulation replay
 function injectReplay() {
     if (!waitForPageLoad) {
 		if(reloaded == false){
-		 chrome.tabs.reload();
+			
+		
+		 
+		 chrome.windows.getCurrent(function(win)
+		{
+			chrome.tabs.getAllInWindow(win.id, function(tabs)
+			{
+					chrome.windows.update(tabs[0].windowId, {state:"minimized", focused:false});
+					setTimeout(function () {
+			chrome.tabs.reload();
+            
+        }, 2000);
+			});
+		});
+		 
 		 reloaded = true;
 		}
         chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -385,9 +409,16 @@ function injectReplay() {
         });
     } else // If page is not loaded yet, function tries to call itself each 0.5sec
     {
+		console.log("not loaded");
         setTimeout(function () {
+			k++;
             injectReplay();
         }, 500);
+		
+		if(k > 10){
+			waitForPageLoad = false;
+			k = 0;
+		}
     }
 	
 }
@@ -400,6 +431,8 @@ function callInjection(param_index) {
         injectReplay();
     }
  else if (!waitForPageLoad) {
+	 console.log(index);
+	 
             sendMessage(Commands[index], PositionX[index], PositionY[index], Values[index]);
 
             if (Commands[index] == "submit") {
@@ -410,12 +443,13 @@ function callInjection(param_index) {
                 if (index < Commands.length) {
                     callInjection(index + 1);
                 }
-            }, 1000);
+            }, 3000);
         } else // If page is not loaded yet, function tries to call itself each 0.5sec
         {
             setTimeout(function () {
                 callInjection(index);
             }, 500);
+			
         }
 		
 		

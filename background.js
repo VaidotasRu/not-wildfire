@@ -383,20 +383,19 @@ function callback(tab) {
 function injectReplay() {
     if (!waitForPageLoad) {
 		if(reloaded == false){
-			
-		
 		 
 		 chrome.windows.getCurrent(function(win)
 		{
 			chrome.tabs.getAllInWindow(win.id, function(tabs)
 			{
 					chrome.windows.update(tabs[0].windowId, {state:"minimized", focused:false});
-					setTimeout(function () {
+					
+			});
+		});
+		setTimeout(function () {
 			chrome.tabs.reload();
             
         }, 2000);
-			});
-		});
 		 
 		 reloaded = true;
 		}
@@ -415,7 +414,7 @@ function injectReplay() {
             injectReplay();
         }, 500);
 		
-		if(k > 10){
+		if(k > 20){
 			waitForPageLoad = false;
 			k = 0;
 		}

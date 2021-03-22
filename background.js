@@ -37,8 +37,8 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         });
 
 
-  //      promptAlarm();
-    //    if (alarmDelay == 0 || alarmPeriod == 0) {
+        promptAlarm();
+        if (alarmDelay == 0 || alarmPeriod == 0) {
 
             if (response.record) {
                 StartReplay(response.record);
@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
                 StartReplay("Default");
             }
         }
-    //}
+    }
 
     if (response.type == "start") { // Start recording
 
@@ -104,7 +104,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
 
 });
-/*
+
 //ALARMS
 chrome.alarms.onAlarm.addListener(function (alarm) {
     if (currentNumber < alarmNumber) {
@@ -156,7 +156,7 @@ function promptAlarm() {
     currentNumber = 0;
 }
 //END OF ALARMS
-*/
+
 // RECORDING
 //---------------------------------------------------------------------------------------------
 
@@ -390,7 +390,6 @@ function callInjection(param_index) {
         injectReplay();
     }
  else if (!waitForPageLoad) {
-        alert(index);
             sendMessage(Commands[index], PositionX[index], PositionY[index], Values[index]);
 
             if (Commands[index] == "submit") {
